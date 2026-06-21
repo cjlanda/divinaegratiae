@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>divinaegratiae</title>
+  <!-- Load Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <style>
+    /* CSS Reset */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    
+    body {
+      background-color: #e2e8f0;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      padding: 20px;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+    }
+    
+    /* Flyer container designed to match the original 682x1024 dimensions */
+    .flyer {
+      width: 682px;
+      height: 1024px;
+      background: linear-gradient(to right, #f4f0e9 0%, #f4f0e9 45%, #eff5fc 65%, #eff5fc 100%);
+      box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+      display: flex;
+      flex-direction: column;
+      position: relative;
+      overflow: hidden;
+    }
+    
+    /* Top header image */
+    .header {
+      width: 100%;
+      height: 425px;
+      display: block;
+    }
+    
+    /* Middle section container */
+    .middle-section {
+      flex: 1; /* Automatically takes the remaining space: 1024 - 425 - 104 = 495px */
+      display: flex;
+      padding: 10px 20px 10px 25px;
+    }
+    
+    /* Left column with offerings */
+    .left-col {
+      width: 375px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding-right: 15px;
+      margin-top: 5px;
+      margin-bottom: 5px;
+    }
+    
+    /* Offering item row */
+    .offering-item {
+      display: flex;
+      align-items: center;
+      padding-bottom: 10px;
+    }
+    
+    /* Circular Icon wrapper */
+    .icon-wrapper {
+      width: 42px;
+      height: 42px;
+      flex-shrink: 0;
+      margin-right: 18px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    
+    .icon-wrapper img {
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
+    }
+    
+    /* Offering text details with separator border */
+    .offering-details {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      flex: 1;
+      padding-bottom: 10px;
+      border-bottom: 1.5px solid #cfdceb;
+    }
+    
+    /* Remove border from last item's details */
+    .offering-item:last-child .offering-details {
+      border-bottom: none;
+      padding-bottom: 0;
+    }
+    
+    .offering-title {
+      font-size: 15px;
+      font-weight: 700;
+      color: #0c3c78;
+      line-height: 1.25;
+    }
+    
+    .offering-desc {
+      font-size: 11px;
+      font-weight: 500;
+      color: #4a607a;
+      margin-top: 2px;
+      line-height: 1.35;
+    }
+    
+    /* Right column with quote and values */
+    .right-col {
+      width: 262px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      margin-top: 5px;
+      margin-bottom: 5px;
+      padding-left: 5px;
+    }
+    
+    /* Quote section image */
+    .quote-img {
+      width: 250px;
+      object-fit: contain;
+      margin-bottom: -5px;
+    }
+    
+    /* Values vertical list */
+    .values-list {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+      margin-bottom: 5px;
+    }
+    
+    .value-item {
+      font-size: 18.5px;
+      font-weight: 800;
+      color: #0c3c78;
+      text-align: center;
+      line-height: 1.2;
+    }
+    
+    /* Highlight the new item guide item */
+    .value-item.new-item {
+      color: #104c91;
+      font-weight: 800;
+      position: relative;
+    }
+    
+    /* Handwritten We Bring Hope script image */
+    .hope-img {
+      width: 235px;
+      object-fit: contain;
+    }
+    
+    /* Bottom footer image */
+    .footer {
+      width: 100%;
+      height: 84px;
+      display: block;
+    }
+    
+    /* Print stylesheet settings */
+    @media print {
+      body {
+        background-color: #fff;
+        padding: 0;
+        margin: 0;
+      }
+      
+      .flyer {
+        box-shadow: none;
+        width: 100vw;
+        height: 100vh;
+        max-width: 100%;
+        max-height: 100%;
+        page-break-inside: avoid;
+      }
+      
+      @page {
+        size: portrait;
+        margin: 0;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="flyer">
+    <!-- Header containing logos and photo -->
+    <img src="divinaegratiae_assets/header.jpg" class="header" alt="divinaegratiae Header">
+    
+    <!-- Middle content section -->
+    <div class="middle-section">
+      
+      <!-- Left column: 5 offering items -->
+      <div class="left-col">
+        
+        <!-- Item 1 -->
+        <div class="offering-item">
+          <div class="icon-wrapper">
+            <img src="divinaegratiae_assets/icon1.png" alt="Pastoral Care Icon">
+          </div>
+          <div class="offering-details">
+            <div class="offering-title">One-on-one pastoral care</div>
+            <div class="offering-desc">for the incarcerated</div>
+          </div>
+        </div>
+        
+        <!-- Item 2 (UPDATED WITH DESCRIPTION) -->
+        <div class="offering-item" style="padding-bottom: 6px;">
+          <div class="icon-wrapper">
+            <img src="divinaegratiae_assets/icon2.png" alt="Religious Instruction Icon">
+          </div>
+          <div class="offering-details">
+            <div class="offering-title">Religious instruction</div>
+            <div class="offering-desc" style="font-size: 9.5px; line-height: 1.3; font-weight: 500; max-width: 290px;">
+              We guide them by gently showing the wrong they have done, encouraging them to repent, and inviting them to ask God for His forgiveness.
+            </div>
+          </div>
+        </div>
+        
+        <!-- Item 3 -->
+        <div class="offering-item">
+          <div class="icon-wrapper">
+            <img src="divinaegratiae_assets/icon3.png" alt="Discussions Icon">
+          </div>
+          <div class="offering-details">
+            <div class="offering-title">Small Group Discussions</div>
+            <div class="offering-desc">and Catholic Apologetics</div>
+          </div>
+        </div>
+        
+        <!-- Item 4 -->
+        <div class="offering-item">
+          <div class="icon-wrapper">
+            <img src="divinaegratiae_assets/icon4.png" alt="Prayer Icon">
+          </div>
+          <div class="offering-details">
+            <div class="offering-title">Prayer and</div>
+            <div class="offering-desc">Sunday Mass Readings</div>
+          </div>
+        </div>
+        
+        <!-- Item 5 -->
+        <div class="offering-item">
+          <div class="icon-wrapper">
+            <img src="divinaegratiae_assets/icon5.png" alt="Literature Icon">
+          </div>
+          <div class="offering-details">
+            <div class="offering-title">Catholic literature,</div>
+            <div class="offering-desc">devotionals and prayer cards</div>
+          </div>
+        </div>
+        
+      </div>
+      
+      <!-- Right column: Quote, Core values, Hope image -->
+      <div class="right-col">
+        <!-- Quote block -->
+        <img src="divinaegratiae_assets/quote_section.png" class="quote-img" alt="Scripture Quote">
+        
+        <!-- Core values vertical list (UPDATED WITH "We guide.") -->
+        <div class="values-list">
+          <div class="value-item">We walk with.</div>
+          <div class="value-item">We listen.</div>
+          <div class="value-item new-item">We guide.</div>
+          <div class="value-item">We pray.</div>
+        </div>
+        
+        <!-- Hope image -->
+        <img src="divinaegratiae_assets/we_bring_hope.png" class="hope-img" alt="We Bring Hope">
+      </div>
+      
+    </div>
+    
+    <!-- Footer banner -->
+    <img src="divinaegratiae_assets/footer.jpg" class="footer" alt="divinaegratiae Footer">
+  </div>
+
+</body>
+</html>
