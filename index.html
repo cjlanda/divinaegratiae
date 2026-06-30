@@ -557,9 +557,84 @@
     }
 
     /* Upcoming Campaigns (Events) Section */
+    .campaigns-container {
+      display: grid;
+      grid-template-columns: 1.1fr 2fr;
+      gap: 32px;
+      align-items: start;
+    }
+
+    .standing-orders-card {
+      background-color: var(--bg-secondary);
+      border: 2px dashed rgba(212, 175, 55, 0.4);
+      border-radius: 4px;
+      padding: 32px 24px;
+      position: sticky;
+      top: 100px;
+      transition: all 0.3s ease;
+    }
+
+    .standing-orders-card:hover {
+      border-color: var(--accent-gold);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .standing-orders-title {
+      font-family: var(--font-headers);
+      font-size: 22px;
+      color: var(--accent-gold);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 20px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+    }
+
+    .standing-orders-list {
+      list-style: none;
+    }
+
+    .standing-order-item {
+      margin-bottom: 20px;
+      position: relative;
+      padding-left: 15px;
+    }
+
+    .standing-order-item::before {
+      content: '';
+      position: absolute;
+      left: 0;
+      top: 7px;
+      width: 6px;
+      height: 6px;
+      background-color: var(--accent-crimson);
+      border-radius: 50%;
+    }
+
+    .standing-order-item:last-child {
+      margin-bottom: 0;
+    }
+
+    .standing-order-item strong {
+      display: block;
+      color: var(--text-primary);
+      font-family: var(--font-headers);
+      text-transform: uppercase;
+      font-size: 14px;
+      letter-spacing: 0.05em;
+    }
+
+    .standing-order-item span {
+      display: block;
+      font-size: 13px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+      line-height: 1.4;
+    }
+
     .events-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
+      grid-template-columns: repeat(2, 1fr);
       gap: 24px;
     }
 
@@ -923,6 +998,12 @@
 
     /* Responsive Design Media Queries */
     @media (max-width: 1024px) {
+      .campaigns-container {
+        grid-template-columns: 1fr;
+      }
+      .standing-orders-card {
+        position: static;
+      }
       .outreach-grid {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -1185,92 +1266,108 @@
         <span class="section-subtitle">Tactical Calendar</span>
         <h2 class="section-title">Upcoming Campaigns</h2>
       </div>
-      <div class="events-grid">
-        <!-- July -->
-        <div class="event-card">
-          <div class="event-month-header">
-            <h3 class="event-month-title">July</h3>
-            <span class="event-month-badge">Q3 Launch</span>
-          </div>
-          <ul class="event-list">
-            <li class="event-item">First Saturday Devotion</li>
-            <li class="event-item">Pilgrim Mary Visitation</li>
-            <li class="event-item">
-              Our Lady of Mount Carmel Scapular Investiture Ceremony
-              <span class="event-highlight">July 12th — Starts after the 9:00 am Mass @ St. Gregory's</span>
+      <div class="campaigns-container">
+        <!-- Standing Orders (Daily / Weekly Devotions) -->
+        <div class="standing-orders-card">
+          <h3 class="standing-orders-title">Standing Orders</h3>
+          <ul class="standing-orders-list">
+            <li class="standing-order-item">
+              <strong>Daily Rosary</strong>
+              <span>Recited daily immediately following the Noon Mass.</span>
+            </li>
+            <li class="standing-order-item">
+              <strong>Perpetual Help Novena</strong>
+              <span>Every Wednesday after the Noon Mass.</span>
+            </li>
+            <li class="standing-order-item">
+              <strong>First Saturday Devotion</strong>
+              <span>Every first Saturday of the month at 11:00 AM @ St. Gregory's.</span>
             </li>
           </ul>
         </div>
 
-        <!-- August -->
-        <div class="event-card">
-          <div class="event-month-header">
-            <h3 class="event-month-title">August</h3>
-            <span class="event-month-badge">Training</span>
+        <!-- Monthly campaigns -->
+        <div class="events-grid">
+          <!-- July -->
+          <div class="event-card">
+            <div class="event-month-header">
+              <h3 class="event-month-title">July</h3>
+              <span class="event-month-badge">Q3 Launch</span>
+            </div>
+            <ul class="event-list">
+              <li class="event-item">Pilgrim Mary Visitation</li>
+              <li class="event-item">
+                Our Lady of Mount Carmel Scapular
+                <span class="event-highlight">Investiture Ceremony & Blessing — July 12th after the 9:00 AM Mass @ St. Gregory's</span>
+              </li>
+            </ul>
           </div>
-          <ul class="event-list">
-            <li class="event-item">First Saturday Devotion</li>
-            <li class="event-item">Pilgrim Mary Visitation</li>
-            <li class="event-item">
-              Rosary Making Class
-              <span class="event-highlight">Learn 5-Decade & Our Lady of Sorrows Rosaries</span>
-            </li>
-          </ul>
-        </div>
 
-        <!-- September -->
-        <div class="event-card">
-          <div class="event-month-header">
-            <h3 class="event-month-title">September</h3>
-            <span class="event-month-badge">Founding Mo.</span>
+          <!-- August -->
+          <div class="event-card">
+            <div class="event-month-header">
+              <h3 class="event-month-title">August</h3>
+              <span class="event-month-badge">Training</span>
+            </div>
+            <ul class="event-list">
+              <li class="event-item">Pilgrim Mary Visitation</li>
+              <li class="event-item">
+                Rosary Making Class
+                <span class="event-highlight">Learn 5-decade Rosary and Our Lady of Sorrows Rosary making</span>
+              </li>
+            </ul>
           </div>
-          <ul class="event-list">
-            <li class="event-item">First Saturday Devotion</li>
-            <li class="event-item">Pilgrim Mary Visitation</li>
-            <li class="event-item">Book Borrow Initiative</li>
-            <li class="event-item">Rosary Making Class</li>
-          </ul>
-        </div>
 
-        <!-- October -->
-        <div class="event-card">
-          <div class="event-month-header">
-            <h3 class="event-month-title">October</h3>
-            <span class="event-month-badge">Rosary Mo.</span>
+          <!-- September -->
+          <div class="event-card">
+            <div class="event-month-header">
+              <h3 class="event-month-title">September</h3>
+              <span class="event-month-badge">Founding Mo.</span>
+            </div>
+            <ul class="event-list">
+              <li class="event-item">Pilgrim Mary Visitation</li>
+              <li class="event-item">Book Borrow Initiative</li>
+              <li class="event-item">Rosary Making Class</li>
+            </ul>
           </div>
-          <ul class="event-list">
-            <li class="event-item">First Saturday Devotion</li>
-            <li class="event-item">Pilgrim Mary Visitation</li>
-            <li class="event-item">
-              Breakfast and Movie Fellowship
-              <span class="event-highlight">Community Event</span>
-            </li>
-          </ul>
-        </div>
 
-        <!-- November -->
-        <div class="event-card">
-          <div class="event-month-header">
-            <h3 class="event-month-title">November</h3>
-            <span class="event-month-badge">Advent Prep</span>
+          <!-- October -->
+          <div class="event-card">
+            <div class="event-month-header">
+              <h3 class="event-month-title">October</h3>
+              <span class="event-month-badge">Rosary Mo.</span>
+            </div>
+            <ul class="event-list">
+              <li class="event-item">Pilgrim Mary Visitation</li>
+              <li class="event-item">
+                Breakfast, Movie & Fellowship
+                <span class="event-highlight">Social Campaign</span>
+              </li>
+            </ul>
           </div>
-          <ul class="event-list">
-            <li class="event-item">First Saturday Devotion</li>
-            <li class="event-item">Book Borrow (Preparation for Advent)</li>
-            <li class="event-item">Pilgrim Holy Family Visitation</li>
-          </ul>
-        </div>
 
-        <!-- December -->
-        <div class="event-card">
-          <div class="event-month-header">
-            <h3 class="event-month-title">December</h3>
-            <span class="event-month-badge">Year-End</span>
+          <!-- November -->
+          <div class="event-card">
+            <div class="event-month-header">
+              <h3 class="event-month-title">November</h3>
+              <span class="event-month-badge">Advent Prep</span>
+            </div>
+            <ul class="event-list">
+              <li class="event-item">Book Borrow (Preparation for Advent)</li>
+              <li class="event-item">Pilgrim Holy Family Visitation</li>
+            </ul>
           </div>
-          <ul class="event-list">
-            <li class="event-item">First Saturday Devotion</li>
-            <li class="event-item">Pilgrim Holy Family Visitation</li>
-          </ul>
+
+          <!-- December -->
+          <div class="event-card">
+            <div class="event-month-header">
+              <h3 class="event-month-title">December</h3>
+              <span class="event-month-badge">Year-End</span>
+            </div>
+            <ul class="event-list">
+              <li class="event-item">Pilgrim Holy Family Visitation</li>
+            </ul>
+          </div>
         </div>
       </div>
     </div>
