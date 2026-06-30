@@ -1522,23 +1522,23 @@
           </p>
         </div>
 
-        <!-- Card 4 (Prison Ministry) -->
-        <div class="outreach-card clickable-card" id="prison-ministry-card">
-          <div class="outreach-icon">⛓️</div>
-          <h3 class="outreach-title">Prison Ministry</h3>
-          <p class="outreach-desc">
-            Outreach and spiritual guidance to youth incarcerated in local juvenile facilities, bringing hope and Catholic materials.
-          </p>
-          <span class="view-flyer-btn">View Flyer ➔</span>
-        </div>
-
-        <!-- Card 5 -->
+        <!-- Card 4 -->
         <div class="outreach-card">
           <div class="outreach-icon">🍞</div>
           <h3 class="outreach-title">Homebound Communion</h3>
           <p class="outreach-desc">
             Serving as a living bridge between the parish church and members unable to attend Mass by bringing them the Holy Eucharist.
           </p>
+        </div>
+
+        <!-- Card 5 (Jail Ministry) -->
+        <div class="outreach-card clickable-card" id="jail-ministry-card">
+          <div class="outreach-icon">⛓️</div>
+          <h3 class="outreach-title">Jail Ministry</h3>
+          <p class="outreach-desc">
+            Outreach and spiritual guidance to youth incarcerated in local juvenile facilities, bringing hope and Catholic materials.
+          </p>
+          <span class="view-flyer-btn">View Flyer ➔</span>
         </div>
       </div>
 
@@ -2193,9 +2193,9 @@
         });
       });
 
-        // Modal Popup Logic for Prison Ministry flyer
+        // Modal Popup Logic for Jail Ministry flyer
         const modal = document.getElementById('flyer-modal');
-        const pmCard = document.getElementById('prison-ministry-card');
+        const pmCard = document.getElementById('jail-ministry-card');
         const closeSpan = document.getElementById('modal-close');
 
         if (pmCard && modal && closeSpan) {
