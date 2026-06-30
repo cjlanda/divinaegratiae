@@ -204,18 +204,64 @@
 
     /* Hero Section */
     .hero {
-      height: 90vh;
-      min-height: 600px;
-      background: linear-gradient(rgba(7, 11, 20, 0.7), rgba(7, 11, 20, 0.95)), url('divinaegratiae_assets/marian_hero.png') no-repeat center center/cover;
+      min-height: 100vh;
       display: flex;
       align-items: center;
-      padding-top: 70px;
+      padding: 120px 0 80px 0;
+      background: linear-gradient(135deg, var(--bg-primary) 0%, #0c1222 100%);
       border-bottom: 3px solid var(--accent-gold);
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* Subtle background grid pattern to resemble marines.com tech detail */
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-image: radial-gradient(rgba(212, 175, 55, 0.05) 1.5px, transparent 1.5px);
+      background-size: 30px 30px;
+      pointer-events: none;
+    }
+
+    .hero-grid {
+      display: grid;
+      grid-template-columns: 1.2fr 1fr;
+      gap: 48px;
+      align-items: center;
+      width: 100%;
     }
 
     .hero-content {
-      max-width: 700px;
       animation: fadeInUp 1s ease-out;
+      z-index: 2;
+    }
+
+    .hero-image-container {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: fadeIn 1.2s ease-out;
+      z-index: 2;
+    }
+
+    .hero-image {
+      width: 100%;
+      max-width: 460px;
+      aspect-ratio: 1 / 1;
+      object-fit: cover;
+      border-radius: 8px;
+      border: 3px solid var(--accent-gold);
+      box-shadow: 0 20px 40px rgba(0, 0, 0, 0.6), 0 0 30px rgba(212, 175, 55, 0.2);
+      transition: transform 0.5s ease, box-shadow 0.5s ease;
+    }
+
+    .hero-image:hover {
+      transform: scale(1.02);
+      box-shadow: 0 25px 50px rgba(0, 0, 0, 0.7), 0 0 40px rgba(212, 175, 55, 0.3);
     }
 
     .hero-tagline {
@@ -824,6 +870,11 @@
       }
     }
 
+    @keyframes fadeIn {
+      from { opacity: 0; }
+      to { opacity: 1; }
+    }
+
     /* Responsive Design Media Queries */
     @media (max-width: 1024px) {
       .events-grid {
@@ -841,8 +892,14 @@
       }
 
       .hero {
-        height: auto;
-        padding: 140px 0 80px 0;
+        min-height: auto;
+        padding: 120px 0 60px 0;
+      }
+
+      .hero-grid {
+        grid-template-columns: 1fr;
+        gap: 40px;
+        text-align: center;
       }
 
       .hero-title {
@@ -856,6 +913,11 @@
       .hero-actions {
         flex-direction: column;
         gap: 12px;
+        align-items: center;
+      }
+
+      .hero-image {
+        max-width: 320px;
       }
 
       .nav-menu {
@@ -932,18 +994,23 @@
   <!-- Hero Section -->
   <section class="hero" id="home">
     <div class="container">
-      <div class="hero-content">
-        <span class="hero-tagline">Mother of Divine Grace Praesidium</span>
-        <h1 class="hero-title">
-          Spiritual Combat.
-          <span>Devotion. Action.</span>
-        </h1>
-        <p class="hero-description">
-          Empowering lay Catholics in San Mateo, California to glorify God through holiness, prayer, and active apostolic service under the banner of Mary Immaculate.
-        </p>
-        <div class="hero-actions">
-          <a href="#enlist" class="btn-primary">Enlist In Service</a>
-          <a href="#mission" class="btn-secondary">Explore Mission</a>
+      <div class="hero-grid">
+        <div class="hero-content">
+          <span class="hero-tagline">Mother of Divine Grace Praesidium</span>
+          <h1 class="hero-title">
+            Spiritual Combat.
+            <span>Devotion. Action.</span>
+          </h1>
+          <p class="hero-description">
+            Empowering lay Catholics in San Mateo, California to glorify God through holiness, prayer, and active apostolic service under the banner of Mary Immaculate.
+          </p>
+          <div class="hero-actions">
+            <a href="#enlist" class="btn-primary">Enlist In Service</a>
+            <a href="#mission" class="btn-secondary">Explore Mission</a>
+          </div>
+        </div>
+        <div class="hero-image-container">
+          <img src="divinaegratiae_assets/marian_hero.png" alt="Mother of Divine Grace" class="hero-image">
         </div>
       </div>
     </div>
