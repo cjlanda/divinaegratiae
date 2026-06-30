@@ -2017,7 +2017,7 @@
       <div class="form-layout">
         <div class="enlist-form">
           <p style="text-align: center; color: var(--text-secondary); margin-bottom: 30px; font-size: 15px; line-height: 1.6; max-width: 600px; margin-left: auto; margin-right: auto;">
-            Join our ranks to carry out local apostolic deployments or support active members through prayer. For direct questions or inquiries, email us at <a href="mailto:divinaegratiae@icloud.com" style="color: var(--accent-gold); text-decoration: none; border-bottom: 1px dashed var(--accent-gold); font-weight: 600; transition: all 0.3s ease;">divinaegratiae@icloud.com</a>.
+            Join our ranks to carry out local apostolic deployments or support active members through prayer.
           </p>
           <div class="form-feedback" id="form-feedback">
             Enlistment application submitted. We will contact you soon for duty details!
@@ -2074,9 +2074,6 @@
         <li><a href="#prayers">Prayers</a></li>
         <li><a href="#resources">Resources</a></li>
       </ul>
-        <div class="footer-email" style="margin-bottom: 16px; font-family: var(--font-headers); font-size: 14px; letter-spacing: 0.05em; text-transform: uppercase;">
-          Contact: <a href="mailto:divinaegratiae@icloud.com" style="color: var(--accent-gold); text-decoration: none; border-bottom: 1px dashed var(--accent-gold); transition: color 0.3s ease;">divinaegratiae@icloud.com</a>
-        </div>
         <div class="footer-copyright">
           &copy; 2026 Legion of Mary - Mother of Divine Grace Praesidium. San Mateo, CA. All Rights Reserved.
         </div>
@@ -2089,7 +2086,7 @@
       <div class="modal-content-container">
         <img class="modal-content" id="flyer-img" src="divinaegratiae_assets/jail_ministry_flyer.png" alt="Jail Ministry Flyer">
         <div class="modal-caption" style="color: var(--text-secondary); font-size: 14px; margin-top: 15px; text-align: center; line-height: 1.5;">
-          Every person is valued. Every story matters. Join the mission to spread the Good News! Contact: <a href="mailto:divinaegratiae@icloud.com" style="color: var(--accent-gold); text-decoration: none;">divinaegratiae@icloud.com</a>
+          Every person is valued. Every story matters. Join the mission to spread the Good News!
         </div>
       </div>
     </div>
@@ -2146,12 +2143,42 @@
       form.addEventListener('submit', function(e) {
         e.preventDefault();
         
-        // Hide form inputs & show success
-        form.style.display = 'none';
-        feedback.style.display = 'block';
-                // Scroll to form header
+        const submitBtn = form.querySelector('.form-submit');
+        submitBtn.disabled = true;
+        submitBtn.innerText = 'Enlisting...';
+
+        // Gather form data
+        const formData = {
+          name: document.getElementById('name').value,
+          email: document.getElementById('email').value,
+          phone: document.getElementById('phone').value,
+          division: document.getElementById('enlistment-type').value,
+          message: document.getElementById('message').value,
+        };
+
+        // Submit via FormSubmit AJAX endpoint
+        fetch('https://formsubmit.co/ajax/divinaegratiae@icloud.com', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+            'Accept': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        })
+        .then(response => response.json())
+        .then(data => {
+          // Hide form inputs & show success
+          form.style.display = 'none';
+          feedback.style.display = 'block';
           document.getElementById('enlist').scrollIntoView({ behavior: 'smooth' });
+        })
+        .catch(error => {
+          console.error('Error:', error);
+          alert('Submission failed. Please try again.');
+          submitBtn.disabled = false;
+          submitBtn.innerText = 'Submit Enlistment';
         });
+      });
 
         // Modal Popup Logic for Prison Ministry flyer
         const modal = document.getElementById('flyer-modal');
