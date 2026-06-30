@@ -510,6 +510,52 @@
       font-weight: bold;
     }
 
+    /* Outreach Section */
+    .outreach-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 24px;
+      margin-top: 20px;
+    }
+
+    .outreach-card {
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 32px 24px;
+      text-align: center;
+      transition: all 0.3s ease;
+      position: relative;
+    }
+
+    .outreach-card:hover {
+      transform: translateY(-5px);
+      border-color: var(--accent-gold);
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+    }
+
+    .outreach-icon {
+      font-size: 32px;
+      color: var(--accent-gold);
+      margin-bottom: 16px;
+      display: inline-block;
+    }
+
+    .outreach-title {
+      font-family: var(--font-headers);
+      font-size: 18px;
+      color: var(--text-primary);
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 12px;
+    }
+
+    .outreach-desc {
+      font-size: 14px;
+      color: var(--text-secondary);
+      line-height: 1.5;
+    }
+
     /* Upcoming Campaigns (Events) Section */
     .events-grid {
       display: grid;
@@ -877,6 +923,9 @@
 
     /* Responsive Design Media Queries */
     @media (max-width: 1024px) {
+      .outreach-grid {
+        grid-template-columns: repeat(2, 1fr);
+      }
       .events-grid {
         grid-template-columns: repeat(2, 1fr);
       }
@@ -918,6 +967,10 @@
 
       .hero-image {
         max-width: 320px;
+      }
+
+      .outreach-grid {
+        grid-template-columns: 1fr;
       }
 
       .nav-menu {
@@ -983,6 +1036,7 @@
       <ul class="nav-menu" id="nav-menu">
         <li><a href="#mission" class="nav-link">Our Mission</a></li>
         <li><a href="#roles" class="nav-link">Ranks</a></li>
+        <li><a href="#outreach" class="nav-link">Outreach</a></li>
         <li><a href="#events" class="nav-link">Campaigns</a></li>
         <li><a href="#history" class="nav-link">Heritage</a></li>
         <li><a href="#prayers" class="nav-link">Prayers</a></li>
@@ -1072,6 +1126,53 @@
             <li>No attendance at weekly meetings or field assignments required.</li>
             <li>Option to advance to Adjutorian grade (adding daily Mass & Communion).</li>
           </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- Evangelization and Community Outreach Section -->
+  <section id="outreach">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-subtitle">Apostolic Action</span>
+        <h2 class="section-title">Evangelization & Outreach</h2>
+      </div>
+      <div class="outreach-grid">
+        <!-- Card 1 -->
+        <div class="outreach-card">
+          <div class="outreach-icon">📖</div>
+          <h3 class="outreach-title">Legion Book Borrow</h3>
+          <p class="outreach-desc">
+            Active book lending and faith dialogues promoting Catholic literature and devotionals in the community.
+          </p>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="outreach-card">
+          <div class="outreach-icon">🏥</div>
+          <h3 class="outreach-title">Brookside Nursing Home</h3>
+          <p class="outreach-desc">
+            Weekly visitations providing companionship, rosary recitation, and spiritual consolation to residents.
+          </p>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="outreach-card">
+          <div class="outreach-icon">🚪</div>
+          <h3 class="outreach-title">Door Knocking</h3>
+          <p class="outreach-desc">
+            Visiting local families in their homes to offer prayers, introduce the parish, and share blessings.
+          </p>
+        </div>
+
+        <!-- Card 4 -->
+        <div class="outreach-card">
+          <div class="outreach-icon">⛓️</div>
+          <h3 class="outreach-title">Prison Ministry</h3>
+          <p class="outreach-desc">
+            Outreach and spiritual guidance to youth incarcerated in local juvenile facilities, bringing hope and Catholic materials.
+          </p>
         </div>
       </div>
     </div>
@@ -1386,6 +1487,7 @@
       <ul class="footer-links">
         <li><a href="#mission">Our Mission</a></li>
         <li><a href="#roles">Ranks</a></li>
+        <li><a href="#outreach">Outreach</a></li>
         <li><a href="#events">Campaigns</a></li>
         <li><a href="#history">Heritage</a></li>
         <li><a href="#prayers">Prayers</a></li>
