@@ -2134,6 +2134,150 @@
   <!-- Page Logic (Interactivity) -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
+      // Dynamic Content Renderer (Admin Portal compatibility)
+      const defaultCampaigns = [
+        {
+          month: "July",
+          badge: "Q3 Launch",
+          events: [
+            { text: "Pilgrim Mary Visitation", highlight: "" },
+            { text: "Our Lady of Mount Carmel Scapular", highlight: "Investiture Ceremony & Blessing — July 12th after the 9:00 AM Mass @ St. Gregory's" }
+          ]
+        },
+        {
+          month: "August",
+          badge: "Training",
+          events: [
+            { text: "Pilgrim Mary Visitation", highlight: "" },
+            { text: "Rosary Making Class", highlight: "Learn 5-decade Rosary and Our Lady of Sorrows Rosary making" }
+          ]
+        },
+        {
+          month: "September",
+          badge: "Founding Mo.",
+          events: [
+            { text: "Pilgrim Mary Visitation", highlight: "" },
+            { text: "Book Borrow Initiative", highlight: "" },
+            { text: "Rosary Making Class", highlight: "" }
+          ]
+        },
+        {
+          month: "October",
+          badge: "Rosary Mo.",
+          events: [
+            { text: "Pilgrim Mary Visitation", highlight: "" },
+            { text: "Breakfast, Movie & Fellowship", highlight: "Social Campaign" }
+          ]
+        },
+        {
+          month: "November",
+          badge: "Advent Prep",
+          events: [
+            { text: "Book Borrow (Preparation for Advent)", highlight: "" },
+            { text: "Pilgrim Holy Family Visitation", highlight: "" }
+          ]
+        },
+        {
+          month: "December",
+          badge: "Year-End",
+          events: [
+            { text: "Pilgrim Holy Family Visitation", highlight: "" }
+          ]
+        }
+      ];
+
+      const defaultMissions = [
+        {
+          name: "Visiting the Dying",
+          status: "Awaiting Volunteers",
+          description: "Comforting individuals in their final hours, helping them prepare spiritually, and ensuring no soul passes away alone."
+        },
+        {
+          name: "Reaching Lapsed Catholics",
+          status: "Awaiting Volunteers",
+          description: "Patiently and charitably contacting lapsed Catholics, inviting them back to the sacraments despite rejection or indifference."
+        },
+        {
+          name: "Faith Formation & Catechism",
+          status: "Awaiting Volunteers",
+          description: "Teaching the truths of the faith to children, RCIA candidates, or adults preparing to receive the sacraments."
+        },
+        {
+          name: "Outreach to the Poor",
+          status: "Awaiting Volunteers",
+          description: "Assisting the impoverished, combining material aid with genuine companionship and spiritual care."
+        },
+        {
+          name: "Marginalized Care",
+          status: "Awaiting Volunteers",
+          description: "Walking with individuals struggling with addiction, homelessness, or extreme social isolation."
+        },
+        {
+          name: "Crisis Family Support",
+          status: "Awaiting Volunteers",
+          description: "Supporting mothers facing crisis pregnancies and families coping with difficult or unstable circumstances."
+        }
+      ];
+
+      let campaigns = JSON.parse(localStorage.getItem('lom_campaigns')) || defaultCampaigns;
+      let missions = JSON.parse(localStorage.getItem('lom_missions')) || defaultMissions;
+
+      // Make sure values are saved in localStorage
+      if (!localStorage.getItem('lom_campaigns')) localStorage.setItem('lom_campaigns', JSON.stringify(campaigns));
+      if (!localStorage.getItem('lom_missions')) localStorage.setItem('lom_missions', JSON.stringify(missions));
+
+      // Render Campaigns
+      const campaignsGrid = document.querySelector('.events-grid');
+      if (campaignsGrid) {
+        campaignsGrid.innerHTML = '';
+        campaigns.forEach(c => {
+          const card = document.createElement('div');
+          card.className = 'event-card';
+          
+          let eventsHtml = '';
+          c.events.forEach(e => {
+            if (e.highlight) {
+              eventsHtml += `
+                <li class="event-item">
+                  ${e.text}
+                  <span class="event-highlight">${e.highlight}</span>
+                </li>`;
+            } else {
+              eventsHtml += `<li class="event-item">${e.text}</li>`;
+            }
+          });
+
+          card.innerHTML = `
+            <div class="event-month-header">
+              <h3 class="event-month-title">${c.month}</h3>
+              <span class="event-month-badge">${c.badge || ''}</span>
+            </div>
+            <ul class="event-list">
+              ${eventsHtml}
+            </ul>
+          `;
+          campaignsGrid.appendChild(card);
+        });
+      }
+
+      // Render Missions
+      const missionsList = document.querySelector('.missions-list');
+      if (missionsList) {
+        missionsList.innerHTML = '';
+        missions.forEach(m => {
+          const item = document.createElement('div');
+          item.className = 'mission-item';
+          item.innerHTML = `
+            <div class="mission-header">
+              <h4 class="mission-name">${m.name}</h4>
+              <span class="mission-status">${m.status}</span>
+            </div>
+            <p class="mission-description">${m.description}</p>
+          `;
+          missionsList.appendChild(item);
+        });
+      }
+
       // Mobile Menu Toggle
       const menuToggle = document.getElementById('menu-toggle');
       const navMenu = document.getElementById('nav-menu');

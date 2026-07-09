@@ -1,0 +1,788 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Portal - Legion of Mary</title>
+  
+  <!-- Load Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-primary: #ffffff;
+      --bg-secondary: #f0f7fd;
+      --bg-tertiary: #e1eefc;
+      --text-primary: #0b1a30;
+      --text-secondary: #4a5c78;
+      --accent-crimson: #a8202a;
+      --accent-gold: #b2820c;
+      --border-color: #d1e3f5;
+      --shadow-soft: 0 10px 30px rgba(11, 26, 48, 0.05);
+      --font-headers: 'Cinzel', Georgia, serif;
+      --font-body: 'Inter', sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: var(--font-body);
+      background-color: var(--bg-secondary);
+      color: var(--text-primary);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    /* Glassmorphic Login Section */
+    #login-container {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(10px);
+      -webkit-backdrop-filter: blur(10px);
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 40px;
+      width: 90%;
+      max-width: 450px;
+      box-shadow: var(--shadow-soft);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    .login-logo {
+      font-family: var(--font-headers);
+      font-size: 24px;
+      color: var(--text-primary);
+      margin-bottom: 8px;
+      letter-spacing: 0.05em;
+    }
+
+    .login-subtitle {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-bottom: 30px;
+    }
+
+    .form-group {
+      margin-bottom: 20px;
+      text-align: left;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 12px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 8px;
+      color: var(--text-primary);
+    }
+
+    .input-field {
+      width: 100%;
+      padding: 12px 16px;
+      border: 1px solid var(--border-color);
+      background: #ffffff;
+      border-radius: 4px;
+      font-family: var(--font-body);
+      font-size: 14px;
+      color: var(--text-primary);
+      outline: none;
+      transition: border-color 0.3s ease;
+    }
+
+    .input-field:focus {
+      border-color: var(--accent-gold);
+    }
+
+    .btn-login {
+      width: 100%;
+      background-color: var(--accent-crimson);
+      color: #ffffff;
+      border: none;
+      padding: 14px;
+      font-family: var(--font-headers);
+      font-size: 15px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      border-radius: 4px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-login:hover {
+      background-color: #8b1820;
+    }
+
+    .error-msg {
+      color: var(--accent-crimson);
+      font-size: 13px;
+      margin-top: 15px;
+      display: none;
+    }
+
+    /* Admin Dashboard Panel */
+    #dashboard-container {
+      display: none;
+      width: 100%;
+      max-width: 1200px;
+      margin: 40px auto;
+      padding: 20px;
+    }
+
+    header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 30px;
+      border-bottom: 2px solid var(--border-color);
+      padding-bottom: 20px;
+    }
+
+    .logo-container h1 {
+      font-family: var(--font-headers);
+      font-size: 28px;
+      color: var(--text-primary);
+    }
+
+    .logo-container p {
+      font-size: 14px;
+      color: var(--text-secondary);
+      margin-top: 4px;
+    }
+
+    .actions-top {
+      display: flex;
+      gap: 12px;
+    }
+
+    .btn-action {
+      background-color: #ffffff;
+      color: var(--text-primary);
+      border: 1px solid var(--border-color);
+      padding: 10px 18px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-family: var(--font-body);
+    }
+
+    .btn-action:hover {
+      background-color: var(--bg-tertiary);
+      border-color: var(--accent-gold);
+    }
+
+    .btn-save {
+      background-color: var(--accent-crimson);
+      color: #ffffff;
+      border: none;
+    }
+
+    .btn-save:hover {
+      background-color: #8b1820;
+    }
+
+    /* Dashboard Layout */
+    .tabs {
+      display: flex;
+      gap: 10px;
+      margin-bottom: 20px;
+    }
+
+    .tab-btn {
+      background: none;
+      border: none;
+      font-family: var(--font-headers);
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text-secondary);
+      padding: 10px 20px;
+      cursor: pointer;
+      border-bottom: 3px solid transparent;
+      transition: all 0.3s ease;
+    }
+
+    .tab-btn.active {
+      color: var(--text-primary);
+      border-bottom-color: var(--accent-gold);
+    }
+
+    .tab-content {
+      display: none;
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      padding: 30px;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    /* Campaigns Tab Styling */
+    .months-editor {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+      gap: 20px;
+    }
+
+    .month-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 20px;
+    }
+
+    .month-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+      border-bottom: 1px solid var(--border-color);
+      padding-bottom: 10px;
+    }
+
+    .month-name {
+      font-family: var(--font-headers);
+      font-size: 18px;
+      color: var(--text-primary);
+    }
+
+    .month-badge-input {
+      width: 120px;
+      padding: 6px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 12px;
+      outline: none;
+    }
+
+    .event-editor-list {
+      list-style: none;
+    }
+
+    .event-editor-item {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      padding: 10px;
+      margin-bottom: 10px;
+      position: relative;
+    }
+
+    .event-editor-item .delete-btn {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      background: none;
+      border: none;
+      color: var(--accent-crimson);
+      cursor: pointer;
+      font-size: 14px;
+    }
+
+    .event-text-input {
+      width: calc(100% - 25px);
+      padding: 6px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 13px;
+      margin-bottom: 6px;
+      outline: none;
+    }
+
+    .event-highlight-input {
+      width: 100%;
+      padding: 6px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-size: 12px;
+      color: var(--accent-crimson);
+      outline: none;
+      background: var(--bg-secondary);
+    }
+
+    .add-event-btn {
+      width: 100%;
+      background: none;
+      border: 1px dashed var(--accent-gold);
+      color: var(--accent-gold);
+      padding: 8px;
+      border-radius: 4px;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .add-event-btn:hover {
+      background: var(--bg-tertiary);
+    }
+
+    /* Missions Tab Styling */
+    .missions-editor {
+      display: flex;
+      flex-direction: column;
+      gap: 20px;
+    }
+
+    .mission-card {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      border-radius: 6px;
+      padding: 20px;
+      position: relative;
+    }
+
+    .mission-card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 15px;
+    }
+
+    .mission-name-input {
+      font-family: var(--font-headers);
+      font-size: 16px;
+      font-weight: 700;
+      padding: 8px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      width: 60%;
+      outline: none;
+    }
+
+    .mission-status-input {
+      padding: 8px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      outline: none;
+      font-size: 13px;
+    }
+
+    .mission-desc-textarea {
+      width: 100%;
+      height: 80px;
+      padding: 10px;
+      border: 1px solid var(--border-color);
+      border-radius: 4px;
+      font-family: var(--font-body);
+      font-size: 13px;
+      outline: none;
+      resize: vertical;
+    }
+
+    .mission-delete-btn {
+      background-color: var(--accent-crimson);
+      color: white;
+      border: none;
+      padding: 8px 14px;
+      border-radius: 4px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 10px;
+      float: right;
+    }
+
+    .add-mission-bar {
+      border-top: 1px solid var(--border-color);
+      padding-top: 20px;
+      text-align: center;
+    }
+
+    .btn-add-mission {
+      background-color: var(--accent-gold);
+      color: white;
+      border: none;
+      padding: 12px 24px;
+      border-radius: 4px;
+      font-family: var(--font-headers);
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: background-color 0.3s ease;
+    }
+
+    .btn-add-mission:hover {
+      background-color: #926907;
+    }
+
+    /* Notification Alert Toast */
+    #toast {
+      position: fixed;
+      bottom: 20px;
+      right: 20px;
+      background-color: #0b1a30;
+      color: #ffffff;
+      padding: 16px 24px;
+      border-radius: 4px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+      font-size: 14px;
+      font-weight: 600;
+      display: none;
+      z-index: 1000;
+      border-left: 4px solid var(--accent-gold);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- 1. Password Protection Modal -->
+  <div id="login-container">
+    <h2 class="login-logo">Legion of Mary</h2>
+    <p class="login-subtitle">Mother of Divine Grace — Admin Login</p>
+    
+    <div class="form-group">
+      <label for="password">Enter Portal Password</label>
+      <input type="password" id="password" class="input-field" placeholder="••••••••" autofocus>
+    </div>
+    
+    <button onclick="checkPassword()" class="btn-login">Unlock Portal</button>
+    <div id="login-error" class="error-msg">Incorrect password. Please try again.</div>
+  </div>
+
+  <!-- 2. Admin Dashboard Panel -->
+  <div id="dashboard-container">
+    <header>
+      <div class="logo-container">
+        <h1>Command Center</h1>
+        <p>Manage Upcoming Campaigns and Open Missions on your parish landing page.</p>
+      </div>
+      <div class="actions-top">
+        <button onclick="resetToDefaults()" class="btn-action">Reset Defaults</button>
+        <button onclick="saveChanges()" class="btn-action btn-save">Save & Deploy</button>
+        <button onclick="logout()" class="btn-action">Lock Portal</button>
+      </div>
+    </header>
+
+    <div class="tabs">
+      <button class="tab-btn active" onclick="switchTab(event, 'campaigns-tab')">Upcoming Campaigns</button>
+      <button class="tab-btn" onclick="switchTab(event, 'missions-tab')">Open Missions</button>
+    </div>
+
+    <!-- Campaigns Editor Tab -->
+    <div id="campaigns-tab" class="tab-content active">
+      <div class="months-editor" id="months-list-container">
+        <!-- Javascript renders months here -->
+      </div>
+    </div>
+
+    <!-- Missions Editor Tab -->
+    <div id="missions-tab" class="tab-content">
+      <div class="missions-editor">
+        <div id="missions-list-container">
+          <!-- Javascript renders missions here -->
+        </div>
+        <div class="add-mission-bar">
+          <button onclick="addNewMission()" class="btn-add-mission">+ Add New Open Mission</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast">Changes saved and deployed to live site!</div>
+
+  <script>
+    // Portal Security check
+    function checkPassword() {
+      const pass = document.getElementById('password').value;
+      const errorMsg = document.getElementById('login-error');
+      
+      if (pass === 'vivacristorey!') {
+        document.getElementById('login-container').style.display = 'none';
+        document.getElementById('dashboard-container').style.display = 'block';
+        document.body.style.justifyContent = 'flex-start';
+        loadDashboardData();
+      } else {
+        errorMsg.style.display = 'block';
+        document.getElementById('password').value = '';
+        document.getElementById('password').focus();
+      }
+    }
+
+    // Support enter key on input
+    document.getElementById('password').addEventListener('keyup', function(e) {
+      if (e.key === 'Enter') {
+        checkPassword();
+      }
+    });
+
+    function logout() {
+      document.getElementById('password').value = '';
+      document.getElementById('login-error').style.display = 'none';
+      document.getElementById('login-container').style.display = 'block';
+      document.getElementById('dashboard-container').style.display = 'none';
+      document.body.style.justifyContent = 'center';
+    }
+
+    // Tab Switching
+    function switchTab(evt, tabId) {
+      const contents = document.querySelectorAll('.tab-content');
+      contents.forEach(content => content.classList.remove('active'));
+      
+      const tabBtns = document.querySelectorAll('.tab-btn');
+      tabBtns.forEach(btn => btn.classList.remove('active'));
+      
+      document.getElementById(tabId).classList.add('active');
+      evt.currentTarget.classList.add('active');
+    }
+
+    // Default Configuration Backups
+    const defaultCampaigns = [
+      {
+        month: "July",
+        badge: "Q3 Launch",
+        events: [
+          { text: "Pilgrim Mary Visitation", highlight: "" },
+          { text: "Our Lady of Mount Carmel Scapular", highlight: "Investiture Ceremony & Blessing — July 12th after the 9:00 AM Mass @ St. Gregory's" }
+        ]
+      },
+      {
+        month: "August",
+        badge: "Training",
+        events: [
+          { text: "Pilgrim Mary Visitation", highlight: "" },
+          { text: "Rosary Making Class", highlight: "Learn 5-decade Rosary and Our Lady of Sorrows Rosary making" }
+        ]
+      },
+      {
+        month: "September",
+        badge: "Founding Mo.",
+        events: [
+          { text: "Pilgrim Mary Visitation", highlight: "" },
+          { text: "Book Borrow Initiative", highlight: "" },
+          { text: "Rosary Making Class", highlight: "" }
+        ]
+      },
+      {
+        month: "October",
+        badge: "Rosary Mo.",
+        events: [
+          { text: "Pilgrim Mary Visitation", highlight: "" },
+          { text: "Breakfast, Movie & Fellowship", highlight: "Social Campaign" }
+        ]
+      },
+      {
+        month: "November",
+        badge: "Advent Prep",
+        events: [
+          { text: "Book Borrow (Preparation for Advent)", highlight: "" },
+          { text: "Pilgrim Holy Family Visitation", highlight: "" }
+        ]
+      },
+      {
+        month: "December",
+        badge: "Year-End",
+        events: [
+          { text: "Pilgrim Holy Family Visitation", highlight: "" }
+        ]
+      }
+    ];
+
+    const defaultMissions = [
+      {
+        name: "Visiting the Dying",
+        status: "Awaiting Volunteers",
+        description: "Comforting individuals in their final hours, helping them prepare spiritually, and ensuring no soul passes away alone."
+      },
+      {
+        name: "Reaching Lapsed Catholics",
+        status: "Awaiting Volunteers",
+        description: "Patiently and charitably contacting lapsed Catholics, inviting them back to the sacraments despite rejection or indifference."
+      },
+      {
+        name: "Faith Formation & Catechism",
+        status: "Awaiting Volunteers",
+        description: "Teaching the truths of the faith to children, RCIA candidates, or adults preparing to receive the sacraments."
+      },
+      {
+        name: "Outreach to the Poor",
+        status: "Awaiting Volunteers",
+        description: "Assisting the impoverished, combining material aid with genuine companionship and spiritual care."
+      },
+      {
+        name: "Marginalized Care",
+        status: "Awaiting Volunteers",
+        description: "Walking with individuals struggling with addiction, homelessness, or extreme social isolation."
+      },
+      {
+        name: "Crisis Family Support",
+        status: "Awaiting Volunteers",
+        description: "Supporting mothers facing crisis pregnancies and families coping with difficult or unstable circumstances."
+      }
+    ];
+
+    let currentCampaigns = [];
+    let currentMissions = [];
+
+    // Load Data
+    function loadDashboardData() {
+      let savedCampaigns = JSON.parse(localStorage.getItem('lom_campaigns'));
+      currentCampaigns = savedCampaigns ? savedCampaigns : [...defaultCampaigns];
+      
+      let savedMissions = JSON.parse(localStorage.getItem('lom_missions'));
+      currentMissions = savedMissions ? savedMissions : [...defaultMissions];
+      
+      renderCampaignsEditor();
+      renderMissionsEditor();
+    }
+
+    // Render Campaigns Editor
+    function renderCampaignsEditor() {
+      const container = document.getElementById('months-list-container');
+      container.innerHTML = '';
+      
+      currentCampaigns.forEach((c, monthIndex) => {
+        const monthCard = document.createElement('div');
+        monthCard.className = 'month-card';
+        
+        let eventsEditorHtml = '';
+        c.events.forEach((e, eventIndex) => {
+          eventsEditorHtml += `
+            <li class="event-editor-item">
+              <button class="delete-btn" onclick="deleteEvent(${monthIndex}, ${eventIndex})">✕</button>
+              <input type="text" class="event-text-input" value="${escapeHtml(e.text)}" placeholder="Event title..." onchange="updateEventText(${monthIndex}, ${eventIndex}, this.value)">
+              <input type="text" class="event-highlight-input" value="${escapeHtml(e.highlight)}" placeholder="Optional highlight detail (e.g. date & location)..." onchange="updateEventHighlight(${monthIndex}, ${eventIndex}, this.value)">
+            </li>`;
+        });
+        
+        monthCard.innerHTML = `
+          <div class="month-header">
+            <span class="month-name">${c.month}</span>
+            <input type="text" class="month-badge-input" value="${escapeHtml(c.badge || '')}" placeholder="Badge label..." onchange="updateMonthBadge(${monthIndex}, this.value)">
+          </div>
+          <ul class="event-editor-list">
+            ${eventsEditorHtml}
+          </ul>
+          <button onclick="addEvent(${monthIndex})" class="add-event-btn">+ Add Event</button>
+        `;
+        
+        container.appendChild(monthCard);
+      });
+    }
+
+    // Render Missions Editor
+    function renderMissionsEditor() {
+      const container = document.getElementById('missions-list-container');
+      container.innerHTML = '';
+      
+      currentMissions.forEach((m, missionIndex) => {
+        const mCard = document.createElement('div');
+        mCard.className = 'mission-card';
+        mCard.innerHTML = `
+          <div class="mission-card-header">
+            <input type="text" class="mission-name-input" value="${escapeHtml(m.name)}" placeholder="Mission Name..." onchange="updateMissionName(${missionIndex}, this.value)">
+            <input type="text" class="mission-status-input" value="${escapeHtml(m.status)}" placeholder="Status (e.g. Awaiting Volunteers)..." onchange="updateMissionStatus(${missionIndex}, this.value)">
+          </div>
+          <textarea class="mission-desc-textarea" placeholder="Description of the mission and duties..." onchange="updateMissionDesc(${missionIndex}, this.value)">${m.description}</textarea>
+          <button onclick="deleteMission(${missionIndex})" class="mission-delete-btn">Delete Mission</button>
+          <div style="clear: both;"></div>
+        `;
+        container.appendChild(mCard);
+      });
+    }
+
+    // Update Functions for Campaigns
+    function updateMonthBadge(mIdx, val) {
+      currentCampaigns[mIdx].badge = val;
+    }
+    
+    function updateEventText(mIdx, eIdx, val) {
+      currentCampaigns[mIdx].events[eIdx].text = val;
+    }
+    
+    function updateEventHighlight(mIdx, eIdx, val) {
+      currentCampaigns[mIdx].events[eIdx].highlight = val;
+    }
+    
+    function deleteEvent(mIdx, eIdx) {
+      currentCampaigns[mIdx].events.splice(eIdx, 1);
+      renderCampaignsEditor();
+    }
+    
+    function addEvent(mIdx) {
+      currentCampaigns[mIdx].events.push({ text: "New Event Title", highlight: "" });
+      renderCampaignsEditor();
+    }
+
+    // Update Functions for Missions
+    function updateMissionName(idx, val) {
+      currentMissions[idx].name = val;
+    }
+    
+    function updateMissionStatus(idx, val) {
+      currentMissions[idx].status = val;
+    }
+    
+    function updateMissionDesc(idx, val) {
+      currentMissions[idx].description = val;
+    }
+    
+    function deleteMission(idx) {
+      currentMissions.splice(idx, 1);
+      renderMissionsEditor();
+    }
+    
+    function addNewMission() {
+      currentMissions.push({
+        name: "New Open Mission",
+        status: "Awaiting Volunteers",
+        description: "Describe the apostolic service requirements here."
+      });
+      renderMissionsEditor();
+    }
+
+    // Reset Defaults
+    function resetToDefaults() {
+      if (confirm("Are you sure you want to reset all campaigns and open missions to default values?")) {
+        currentCampaigns = JSON.parse(JSON.stringify(defaultCampaigns));
+        currentMissions = JSON.parse(JSON.stringify(defaultMissions));
+        renderCampaignsEditor();
+        renderMissionsEditor();
+        showToast("Reset to defaults! Click 'Save & Deploy' to save.");
+      }
+    }
+
+    // Save Changes
+    function saveChanges() {
+      localStorage.setItem('lom_campaigns', JSON.stringify(currentCampaigns));
+      localStorage.setItem('lom_missions', JSON.stringify(currentMissions));
+      showToast("Changes saved and deployed to live site!");
+    }
+
+    // Helpers
+    function escapeHtml(text) {
+      return text
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;")
+        .replace(/'/g, "&#039;");
+    }
+
+    function showToast(msg) {
+      const toast = document.getElementById('toast');
+      toast.innerText = msg;
+      toast.style.display = 'block';
+      setTimeout(() => {
+        toast.style.display = 'none';
+      }, 4000);
+    }
+  </script>
+</body>
+</html>
