@@ -554,10 +554,10 @@
       },
       {
         month: "August",
-        badge: "Training",
+        badge: "Workshop",
         events: [
           { text: "Pilgrim Mary Visitation", highlight: "" },
-          { text: "Rosary Making Class", highlight: "Learn 5-decade Rosary and Our Lady of Sorrows Rosary making" }
+          { text: "Rosary Making Workshop", highlight: "Saturday, August 15th, 9:30–11:30 AM @ Worner Center. RSVP: stgregorylegionofmary@gmail.com" }
         ]
       },
       {
@@ -634,6 +634,29 @@
     function loadDashboardData() {
       let savedCampaigns = JSON.parse(localStorage.getItem('lom_campaigns'));
       currentCampaigns = savedCampaigns ? savedCampaigns : [...defaultCampaigns];
+      
+      // Auto-update August class to workshop if old defaults are found
+      let updated = false;
+      currentCampaigns = currentCampaigns.map(c => {
+        if (c.month === "August") {
+          let hasOldClass = false;
+          c.events = c.events.map(e => {
+            if (e.text === "Rosary Making Class") {
+              hasOldClass = true;
+              return { text: "Rosary Making Workshop", highlight: "Saturday, August 15th, 9:30–11:30 AM @ Worner Center. RSVP: stgregorylegionofmary@gmail.com" };
+            }
+            return e;
+          });
+          if (hasOldClass) {
+            c.badge = "Workshop";
+            updated = true;
+          }
+        }
+        return c;
+      });
+      if (updated) {
+        localStorage.setItem('lom_campaigns', JSON.stringify(currentCampaigns));
+      }
       
       let savedMissions = JSON.parse(localStorage.getItem('lom_missions'));
       currentMissions = savedMissions ? savedMissions : [...defaultMissions];

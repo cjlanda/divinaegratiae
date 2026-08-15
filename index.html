@@ -1829,13 +1829,13 @@
             <div class="event-card">
               <div class="event-month-header">
                 <h3 class="event-month-title">August</h3>
-                <span class="event-month-badge">Training</span>
+                <span class="event-month-badge">Workshop</span>
               </div>
               <ul class="event-list">
                 <li class="event-item">Pilgrim Mary Visitation</li>
                 <li class="event-item">
-                  Rosary Making Class
-                  <span class="event-highlight">Learn 5-decade Rosary and Our Lady of Sorrows Rosary making</span>
+                  Rosary Making Workshop
+                  <span class="event-highlight">Saturday, August 15th, 9:30–11:30 AM @ Worner Center. RSVP: stgregorylegionofmary@gmail.com</span>
                 </li>
               </ul>
             </div>
@@ -2244,10 +2244,10 @@
         },
         {
           month: "August",
-          badge: "Training",
+          badge: "Workshop",
           events: [
             { text: "Pilgrim Mary Visitation", highlight: "" },
-            { text: "Rosary Making Class", highlight: "Learn 5-decade Rosary and Our Lady of Sorrows Rosary making" }
+            { text: "Rosary Making Workshop", highlight: "Saturday, August 15th, 9:30–11:30 AM @ Worner Center. RSVP: stgregorylegionofmary@gmail.com" }
           ]
         },
         {
@@ -2318,6 +2318,30 @@
       ];
 
       let campaigns = JSON.parse(localStorage.getItem('lom_campaigns')) || defaultCampaigns;
+      
+      // Auto-migrate old default August class to new workshop details
+      let updated = false;
+      campaigns = campaigns.map(c => {
+        if (c.month === "August") {
+          let hasOldClass = false;
+          c.events = c.events.map(e => {
+            if (e.text === "Rosary Making Class") {
+              hasOldClass = true;
+              return { text: "Rosary Making Workshop", highlight: "Saturday, August 15th, 9:30–11:30 AM @ Worner Center. RSVP: stgregorylegionofmary@gmail.com" };
+            }
+            return e;
+          });
+          if (hasOldClass) {
+            c.badge = "Workshop";
+            updated = true;
+          }
+        }
+        return c;
+      });
+      if (updated) {
+        localStorage.setItem('lom_campaigns', JSON.stringify(campaigns));
+      }
+
       let missions = JSON.parse(localStorage.getItem('lom_missions')) || defaultMissions;
 
       // Make sure values are saved in localStorage
