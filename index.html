@@ -758,6 +758,64 @@
       align-items: start;
     }
 
+    .campaigns-right-col {
+      display: flex;
+      flex-direction: column;
+      gap: 32px;
+    }
+
+    .previous-campaigns-section {
+      border-top: 1px solid var(--border-color);
+      padding-top: 24px;
+    }
+
+    .previous-campaigns-trigger {
+      width: 100%;
+      background-color: var(--bg-secondary);
+      border: 1px solid var(--border-color);
+      color: var(--text-primary);
+      font-family: var(--font-headers);
+      font-size: 13px;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      padding: 14px 20px;
+      border-radius: 4px;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      transition: all 0.3s ease;
+      outline: none;
+    }
+
+    .previous-campaigns-trigger:hover {
+      background-color: var(--bg-tertiary);
+      border-color: var(--accent-gold);
+    }
+
+    .previous-campaigns-content {
+      max-height: 0;
+      overflow: hidden;
+      transition: max-height 0.4s cubic-bezier(0, 1, 0, 1);
+    }
+
+    .previous-campaigns-content.active {
+      max-height: 2000px;
+      transition: max-height 0.4s ease-in-out;
+      margin-top: 20px;
+    }
+
+    .previous-campaigns-trigger .accordion-arrow {
+      transition: transform 0.3s ease;
+      font-size: 10px;
+      color: var(--accent-gold);
+    }
+
+    .previous-campaigns-trigger.active .accordion-arrow {
+      transform: rotate(180deg);
+    }
+
     .standing-orders-card {
       background-color: var(--bg-secondary);
       border: 2px dashed rgba(212, 175, 55, 0.4);
@@ -1746,89 +1804,110 @@
               <span>Every first Saturday of the month at 11:00 AM.</span>
             </li>
           </ul>
+          <!-- QR Code linking to Tactical Calendar -->
+          <div class="calendar-qr-container" style="margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border-color); text-align: center;">
+            <div style="font-size: 11px; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--text-secondary); margin-bottom: 12px;">Share Calendar / Scan to View</div>
+            <img src="divinaegratiae_assets/calendar_qr.png" alt="Tactical Calendar QR Code" style="width: 140px; height: 140px; border: 2px solid var(--border-color); border-radius: 4px; padding: 4px; background: white; display: inline-block;">
+          </div>
         </div>
 
-        <!-- Monthly campaigns -->
-        <div class="events-grid">
-          <!-- July -->
-          <div class="event-card">
-            <div class="event-month-header">
-              <h3 class="event-month-title">July</h3>
-              <span class="event-month-badge">Q3 Launch</span>
+        <!-- Monthly campaigns (Right Column) -->
+        <div class="campaigns-right-col">
+          <!-- Upcoming Campaigns Grid -->
+          <div class="events-grid">
+            <!-- July -->
+            <div class="event-card">
+              <div class="event-month-header">
+                <h3 class="event-month-title">July</h3>
+                <span class="event-month-badge">Q3 Launch</span>
+              </div>
+              <ul class="event-list">
+                <li class="event-item">Pilgrim Mary Visitation</li>
+                <li class="event-item">
+                  Our Lady of Mount Carmel Scapular
+                  <span class="event-highlight">Investiture Ceremony & Blessing — July 12th after the 9:00 AM Mass @ St. Gregory's</span>
+                </li>
+              </ul>
             </div>
-            <ul class="event-list">
-              <li class="event-item">Pilgrim Mary Visitation</li>
-              <li class="event-item">
-                Our Lady of Mount Carmel Scapular
-                <span class="event-highlight">Investiture Ceremony & Blessing — July 12th after the 9:00 AM Mass @ St. Gregory's</span>
-              </li>
-            </ul>
+
+            <!-- August -->
+            <div class="event-card">
+              <div class="event-month-header">
+                <h3 class="event-month-title">August</h3>
+                <span class="event-month-badge">Training</span>
+              </div>
+              <ul class="event-list">
+                <li class="event-item">Pilgrim Mary Visitation</li>
+                <li class="event-item">
+                  Rosary Making Class
+                  <span class="event-highlight">Learn 5-decade Rosary and Our Lady of Sorrows Rosary making</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- September -->
+            <div class="event-card">
+              <div class="event-month-header">
+                <h3 class="event-month-title">September</h3>
+                <span class="event-month-badge">Founding Mo.</span>
+              </div>
+              <ul class="event-list">
+                <li class="event-item">Pilgrim Mary Visitation</li>
+                <li class="event-item">Book Borrow Initiative</li>
+                <li class="event-item">Rosary Making Class</li>
+              </ul>
+            </div>
+
+            <!-- October -->
+            <div class="event-card">
+              <div class="event-month-header">
+                <h3 class="event-month-title">October</h3>
+                <span class="event-month-badge">Rosary Mo.</span>
+              </div>
+              <ul class="event-list">
+                <li class="event-item">Pilgrim Mary Visitation</li>
+                <li class="event-item">
+                  Breakfast, Movie & Fellowship
+                  <span class="event-highlight">Social Campaign</span>
+                </li>
+              </ul>
+            </div>
+
+            <!-- November -->
+            <div class="event-card">
+              <div class="event-month-header">
+                <h3 class="event-month-title">November</h3>
+                <span class="event-month-badge">Advent Prep</span>
+              </div>
+              <ul class="event-list">
+                <li class="event-item">Book Borrow (Preparation for Advent)</li>
+                <li class="event-item">Pilgrim Holy Family Visitation</li>
+              </ul>
+            </div>
+
+            <!-- December -->
+            <div class="event-card">
+              <div class="event-month-header">
+                <h3 class="event-month-title">December</h3>
+                <span class="event-month-badge">Year-End</span>
+              </div>
+              <ul class="event-list">
+                <li class="event-item">Pilgrim Holy Family Visitation</li>
+              </ul>
+            </div>
           </div>
 
-          <!-- August -->
-          <div class="event-card">
-            <div class="event-month-header">
-              <h3 class="event-month-title">August</h3>
-              <span class="event-month-badge">Training</span>
+          <!-- Collapsible Past Campaigns Accordion -->
+          <div class="previous-campaigns-section" id="previous-campaigns-section" style="display: none;">
+            <button class="previous-campaigns-trigger" id="previous-campaigns-trigger">
+              <span>Show Past Campaigns</span>
+              <span class="accordion-arrow">▼</span>
+            </button>
+            <div class="previous-campaigns-content" id="previous-campaigns-content">
+              <div class="events-grid previous-events-grid">
+                <!-- Past campaigns dynamically loaded here -->
+              </div>
             </div>
-            <ul class="event-list">
-              <li class="event-item">Pilgrim Mary Visitation</li>
-              <li class="event-item">
-                Rosary Making Class
-                <span class="event-highlight">Learn 5-decade Rosary and Our Lady of Sorrows Rosary making</span>
-              </li>
-            </ul>
-          </div>
-
-          <!-- September -->
-          <div class="event-card">
-            <div class="event-month-header">
-              <h3 class="event-month-title">September</h3>
-              <span class="event-month-badge">Founding Mo.</span>
-            </div>
-            <ul class="event-list">
-              <li class="event-item">Pilgrim Mary Visitation</li>
-              <li class="event-item">Book Borrow Initiative</li>
-              <li class="event-item">Rosary Making Class</li>
-            </ul>
-          </div>
-
-          <!-- October -->
-          <div class="event-card">
-            <div class="event-month-header">
-              <h3 class="event-month-title">October</h3>
-              <span class="event-month-badge">Rosary Mo.</span>
-            </div>
-            <ul class="event-list">
-              <li class="event-item">Pilgrim Mary Visitation</li>
-              <li class="event-item">
-                Breakfast, Movie & Fellowship
-                <span class="event-highlight">Social Campaign</span>
-              </li>
-            </ul>
-          </div>
-
-          <!-- November -->
-          <div class="event-card">
-            <div class="event-month-header">
-              <h3 class="event-month-title">November</h3>
-              <span class="event-month-badge">Advent Prep</span>
-            </div>
-            <ul class="event-list">
-              <li class="event-item">Book Borrow (Preparation for Advent)</li>
-              <li class="event-item">Pilgrim Holy Family Visitation</li>
-            </ul>
-          </div>
-
-          <!-- December -->
-          <div class="event-card">
-            <div class="event-month-header">
-              <h3 class="event-month-title">December</h3>
-              <span class="event-month-badge">Year-End</span>
-            </div>
-            <ul class="event-list">
-              <li class="event-item">Pilgrim Holy Family Visitation</li>
-            </ul>
           </div>
         </div>
       </div>
@@ -2228,36 +2307,92 @@
 
       // Render Campaigns
       const campaignsGrid = document.querySelector('.events-grid');
+      const pastGrid = document.querySelector('.previous-events-grid');
+      const pastSection = document.getElementById('previous-campaigns-section');
+      
+      const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      const currentMonthIdx = new Date().getMonth();
+
+      const upcomingCampaigns = [];
+      const pastCampaigns = [];
+
+      campaigns.forEach(c => {
+        const mIdx = monthNames.indexOf(c.month);
+        if (mIdx !== -1 && mIdx < currentMonthIdx) {
+          pastCampaigns.push(c);
+        } else {
+          upcomingCampaigns.push(c);
+        }
+      });
+
+      function createCampaignCard(c) {
+        const card = document.createElement('div');
+        card.className = 'event-card';
+        
+        let eventsHtml = '';
+        c.events.forEach(e => {
+          if (e.highlight) {
+            eventsHtml += `
+              <li class="event-item">
+                ${e.text}
+                <span class="event-highlight">${e.highlight}</span>
+              </li>`;
+          } else {
+            eventsHtml += `<li class="event-item">${e.text}</li>`;
+          }
+        });
+
+        card.innerHTML = `
+          <div class="event-month-header">
+            <h3 class="event-month-title">${c.month}</h3>
+            <span class="event-month-badge">${c.badge || ''}</span>
+          </div>
+          <ul class="event-list">
+            ${eventsHtml}
+          </ul>
+        `;
+        return card;
+      }
+
       if (campaignsGrid) {
         campaignsGrid.innerHTML = '';
-        campaigns.forEach(c => {
-          const card = document.createElement('div');
-          card.className = 'event-card';
-          
-          let eventsHtml = '';
-          c.events.forEach(e => {
-            if (e.highlight) {
-              eventsHtml += `
-                <li class="event-item">
-                  ${e.text}
-                  <span class="event-highlight">${e.highlight}</span>
-                </li>`;
-            } else {
-              eventsHtml += `<li class="event-item">${e.text}</li>`;
-            }
+        upcomingCampaigns.forEach(c => {
+          campaignsGrid.appendChild(createCampaignCard(c));
+        });
+      }
+
+      if (pastCampaigns.length > 0) {
+        if (pastSection && pastGrid) {
+          pastSection.style.display = 'block';
+          pastGrid.innerHTML = '';
+          pastCampaigns.forEach(c => {
+            pastGrid.appendChild(createCampaignCard(c));
           });
 
-          card.innerHTML = `
-            <div class="event-month-header">
-              <h3 class="event-month-title">${c.month}</h3>
-              <span class="event-month-badge">${c.badge || ''}</span>
-            </div>
-            <ul class="event-list">
-              ${eventsHtml}
-            </ul>
-          `;
-          campaignsGrid.appendChild(card);
-        });
+          // Accordion trigger behavior
+          const trigger = document.getElementById('previous-campaigns-trigger');
+          const content = document.getElementById('previous-campaigns-content');
+          if (trigger && content) {
+            trigger.addEventListener('click', function() {
+              const isActive = trigger.classList.contains('active');
+              if (isActive) {
+                trigger.classList.remove('active');
+                content.classList.remove('active');
+                content.style.maxHeight = null;
+                trigger.querySelector('span:first-child').innerText = 'Show Past Campaigns';
+              } else {
+                trigger.classList.add('active');
+                content.classList.add('active');
+                content.style.maxHeight = content.scrollHeight + 'px';
+                trigger.querySelector('span:first-child').innerText = 'Hide Past Campaigns';
+              }
+            });
+          }
+        }
+      } else {
+        if (pastSection) {
+          pastSection.style.display = 'none';
+        }
       }
 
       // Render Missions
