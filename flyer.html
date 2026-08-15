@@ -277,7 +277,7 @@
     }
 
     .footer-cta {
-      width: 65%;
+      width: 60%;
     }
 
     .footer-cta-title {
@@ -291,7 +291,7 @@
 
     .footer-cta-desc {
       font-size: 11px;
-      line-height: 1.4;
+      line-height: 1.45;
       color: var(--text-secondary);
     }
 
@@ -300,23 +300,26 @@
       display: flex;
       flex-direction: column;
       align-items: center;
-      gap: 4px;
+      gap: 6px;
+      width: 35%;
     }
 
     .qr-img {
-      width: 85px;
-      height: 85px;
-      border: 1px solid var(--border-color);
-      padding: 2px;
+      width: 105px;
+      height: 105px;
+      border: 2px solid var(--accent-gold);
+      padding: 4px;
       background: white;
+      box-shadow: 0 4px 10px rgba(11, 26, 48, 0.08);
+      transition: transform 0.2s ease;
     }
 
     .qr-label {
-      font-size: 8px;
-      font-weight: 600;
+      font-size: 9px;
+      font-weight: 700;
       text-transform: uppercase;
-      letter-spacing: 0.05em;
-      color: var(--text-secondary);
+      letter-spacing: 0.06em;
+      color: var(--text-primary);
     }
 
     /* Print settings */
@@ -424,14 +427,14 @@
     <!-- Footer / Call to Action -->
     <div class="flyer-footer">
       <div class="footer-cta">
-        <h3 class="footer-cta-title">Enlist in the Legion</h3>
+        <h3 class="footer-cta-title">Upcoming Campaigns & Events</h3>
         <p class="footer-cta-desc">
-          Ready to serve? Scan the QR code to register online or review our tactical schedule, or contact us directly at <strong>divinaegratiae@icloud.com</strong>. Visitors are always welcome to observe a weekly meeting.
+          Scan the QR code to check our dynamic Tactical Calendar, find out about our monthly campaigns (like Rosary classes and movie nights), or register for updates. You can also reach us directly at <strong>divinaegratiae@icloud.com</strong>.
         </p>
       </div>
       <div class="footer-qr">
-        <img src="divinaegratiae_assets/calendar_qr.png" alt="QR Code Link" class="qr-img">
-        <span class="qr-label">Scan to Visit</span>
+        <img src="divinaegratiae_assets/calendar_qr.png" alt="Tactical Calendar QR Code" class="qr-img">
+        <span class="qr-label">Scan for Events</span>
       </div>
     </div>
   </div>
