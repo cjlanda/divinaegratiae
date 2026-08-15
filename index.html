@@ -19,47 +19,6 @@
   <meta property="twitter:description" content="Empowering lay Catholics in San Mateo, California to glorify God through holiness, prayer, and active apostolic service.">
   <meta property="twitter:image" content="https://legionofmarysanmateo.org/divinaegratiae_assets/marian_hero.png">
   
-  <!-- Canonical and SEO Meta Tags -->
-  <link rel="canonical" href="https://legionofmarysanmateo.org/">
-  <meta name="keywords" content="Legion of Mary, San Mateo, Catholic, St. Gregory, volunteer, parish ministry, Rosary, Marian devotion, Catholic charity, chapel">
-
-  <!-- JSON-LD Structured Data Schema for Search Engines -->
-  <script type="application/ld+json">
-  {
-    "@context": "https://schema.org",
-    "@type": "PlaceOfWorship",
-    "name": "Legion of Mary - Mother of Divine Grace Praesidium",
-    "description": "A lay Catholic organization dedicated to prayer and active apostolic service at St. Gregory's Catholic Church in San Mateo, California.",
-    "url": "https://legionofmarysanmateo.org",
-    "image": "https://legionofmarysanmateo.org/divinaegratiae_assets/marian_hero.png",
-    "address": {
-      "@type": "PostalAddress",
-      "streetAddress": "140 28th Ave",
-      "addressLocality": "San Mateo",
-      "addressRegion": "CA",
-      "postalCode": "94403",
-      "addressCountry": "US"
-    },
-    "parentOrganization": {
-      "@type": "Organization",
-      "name": "Legion of Mary",
-      "url": "https://www.legionofmary.ie"
-    },
-    "location": {
-      "@type": "Church",
-      "name": "St. Gregory's Catholic Church",
-      "address": {
-        "@type": "PostalAddress",
-        "streetAddress": "140 28th Ave",
-        "addressLocality": "San Mateo",
-        "addressRegion": "CA",
-        "postalCode": "94403",
-        "addressCountry": "US"
-      }
-    }
-  }
-  </script>
-
   <!-- Load Google Fonts -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -1829,7 +1788,7 @@
         <div class="standing-orders-card">
           <h3 class="standing-orders-title">Standing Orders</h3>
           <div style="font-size: 12px; color: var(--accent-gold); font-family: var(--font-headers); text-transform: uppercase; margin-bottom: 20px; border-bottom: 1px solid var(--border-color); padding-bottom: 12px; letter-spacing: 0.05em; display: flex; align-items: center; gap: 6px;">
-            <span>📍</span> Location: St. Gregory's Catholic Church's Chapel
+            <span>📍</span> Location: St. Gregory's Catholic Church
           </div>
           <ul class="standing-orders-list">
             <li class="standing-order-item">
@@ -2229,9 +2188,6 @@
         <a href="flyer.html" class="btn-primary" style="background-color: var(--accent-gold); text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
           <span>📄</span> View Printable Flyer
         </a>
-        <button id="copy-flyer-btn" class="btn-primary" style="background-color: var(--accent-gold); color: #ffffff; display: inline-flex; align-items: center; gap: 8px; border: none; outline: none;">
-          <span>🔗</span> Copy Flyer Link
-        </button>
         <button id="copy-link-btn" class="btn-primary" style="background-color: var(--text-primary); color: #ffffff; display: inline-flex; align-items: center; gap: 8px; border: none; outline: none;">
           <span>🔗</span> Copy Invitation Link
         </button>
@@ -2613,31 +2569,14 @@
 
         // Copy Link Button Logic
         const copyBtn = document.getElementById('copy-link-btn');
-        const copyFlyerBtn = document.getElementById('copy-flyer-btn');
         const copyFeedback = document.getElementById('copy-feedback');
-
-        function showFeedback(text) {
-          copyFeedback.innerText = text;
-          copyFeedback.style.opacity = '1';
-          setTimeout(() => {
-            copyFeedback.style.opacity = '0';
-          }, 2500);
-        }
-
         if (copyBtn && copyFeedback) {
           copyBtn.addEventListener('click', function() {
             navigator.clipboard.writeText('https://legionofmarysanmateo.org').then(() => {
-              showFeedback('Invitation link copied to clipboard!');
-            }).catch(err => {
-              console.error('Failed to copy text: ', err);
-            });
-          });
-        }
-
-        if (copyFlyerBtn && copyFeedback) {
-          copyFlyerBtn.addEventListener('click', function() {
-            navigator.clipboard.writeText('https://legionofmarysanmateo.org/flyer.html').then(() => {
-              showFeedback('Flyer link copied! Ready to share via text.');
+              copyFeedback.style.opacity = '1';
+              setTimeout(() => {
+                copyFeedback.style.opacity = '0';
+              }, 2500);
             }).catch(err => {
               console.error('Failed to copy text: ', err);
             });
