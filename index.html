@@ -2167,16 +2167,16 @@
   <section id="enlist" style="background-color: var(--bg-secondary);">
     <div class="container">
       <div class="section-header">
-        <span class="section-subtitle">Sign Up For Service</span>
-        <h2 class="section-title">Enlist in the Legion</h2>
+        <span class="section-subtitle">Sign Up For Service / General Inquiries</span>
+        <h2 class="section-title">Enlist in the Legion or Contact Us</h2>
       </div>
       <div class="form-layout">
         <div class="enlist-form">
           <p style="text-align: center; color: var(--text-secondary); margin-bottom: 30px; font-size: 15px; line-height: 1.6; max-width: 600px; margin-left: auto; margin-right: auto;">
-            Join our ranks to carry out local apostolic deployments or support active members through prayer.
+            Join our ranks to carry out local apostolic deployments, support active members through prayer, or reach out to us with general inquiries.
           </p>
           <div class="form-feedback" id="form-feedback">
-            Enlistment application submitted. We will contact you soon for duty details!
+            Form submitted successfully. Thank you!
           </div>
           <form id="enlist-form">
             <div class="form-group">
@@ -2195,9 +2195,9 @@
             </div>
 
             <div class="form-group">
-              <label for="enlistment-type">Enlistment Type</label>
+              <label for="enlistment-type">Purpose of Contact</label>
               <select id="enlistment-type" class="form-control" required>
-                <option value="" disabled selected>Select your division...</option>
+                <option value="" disabled selected>Select an option...</option>
                 <option value="active">Active duty (Meetings & Fieldwork)</option>
                 <option value="auxiliary">Auxiliary (Daily Prayer Support)</option>
                 <option value="inquire">General Inquiry / Information</option>
@@ -2543,20 +2543,33 @@
       // Form Submission Handler
       const form = document.getElementById('enlist-form');
       const feedback = document.getElementById('form-feedback');
+      const enlistmentTypeSelect = document.getElementById('enlistment-type');
+      const submitBtn = form.querySelector('.form-submit');
+
+      // Update button text based on selection
+      if (enlistmentTypeSelect && submitBtn) {
+        enlistmentTypeSelect.addEventListener('change', function() {
+          if (this.value === 'inquire') {
+            submitBtn.innerText = 'Submit Inquiry';
+          } else {
+            submitBtn.innerText = 'Submit Enlistment';
+          }
+        });
+      }
 
       form.addEventListener('submit', function(e) {
         e.preventDefault();
         
-        const submitBtn = form.querySelector('.form-submit');
+        const isInquiry = enlistmentTypeSelect ? enlistmentTypeSelect.value === 'inquire' : false;
         submitBtn.disabled = true;
-        submitBtn.innerText = 'Enlisting...';
+        submitBtn.innerText = isInquiry ? 'Submitting...' : 'Enlisting...';
 
         // Gather form data
         const formData = {
           name: document.getElementById('name').value,
           email: document.getElementById('email').value,
           phone: document.getElementById('phone').value,
-          division: document.getElementById('enlistment-type').value,
+          division: enlistmentTypeSelect ? enlistmentTypeSelect.value : '',
           message: document.getElementById('message').value,
         };
 
@@ -2571,6 +2584,12 @@
         })
         .then(response => response.json())
         .then(data => {
+          // Set custom feedback message based on purpose
+          if (isInquiry) {
+            feedback.innerText = 'Thank you for your inquiry. We will contact you soon with the requested information!';
+          } else {
+            feedback.innerText = 'Enlistment application submitted. We will contact you soon for duty details!';
+          }
           // Hide form inputs & show success
           form.style.display = 'none';
           feedback.style.display = 'block';
@@ -2580,7 +2599,7 @@
           console.error('Error:', error);
           alert('Submission failed. Please try again.');
           submitBtn.disabled = false;
-          submitBtn.innerText = 'Submit Enlistment';
+          submitBtn.innerText = isInquiry ? 'Submit Inquiry' : 'Submit Enlistment';
         });
       });
 
