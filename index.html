@@ -2359,36 +2359,142 @@
         }
       ];
 
-      let campaigns = JSON.parse(localStorage.getItem('lom_campaigns')) || defaultCampaigns;
+      const defaultOutreach = [
+        {
+          icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 32px; height: 32px;"><rect x="5" y="3" width="14" height="18" rx="2" ry="2"/><path d="M12 7v8M9.5 10h5"/></svg>`,
+          title: "Legion Book Barrow",
+          desc: "A portable stand, table, or cart used for street evangelization and public distribution of religious literature, prayer cards, and sacramentals (no book lending)."
+        },
+        {
+          icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 32px; height: 32px;"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 8v8M8 12h8"/></svg>`,
+          title: "Brookside Nursing Home",
+          desc: "Weekly visitations providing companionship, rosary recitation, and spiritual consolation to residents."
+        },
+        {
+          icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 32px; height: 32px;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
+          title: "Door Knocking",
+          desc: "Visiting local families in their homes to offer prayers, introduce the parish, and share blessings."
+        },
+        {
+          icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 32px; height: 32px;"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M8.5 12h7"/></svg>`,
+          title: "Homebound Communion",
+          desc: "Serving as a living bridge between the parish church and members unable to attend Mass by bringing them the Holy Eucharist."
+        },
+        {
+          icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 32px; height: 32px;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>`,
+          title: "Prison Ministry",
+          desc: "Outreach and spiritual guidance to youth incarcerated in local juvenile facilities, bringing hope and Catholic materials.",
+          hasFlyer: true
+        }
+      ];
+
+      const defaultResources = [
+        {
+          icon: "📕",
+          title: "Official Handbook",
+          desc: "The primary tactical guide and rulebook defining the administration, spiritual framework, and duties of the Legion of Mary (2024 PDF Edition).",
+          url: "https://legionofmary.ie/images/uploads/files/The_Official_Handbook_of_the_Legion_of_Mary_%28Ed._2024%29_.pdf",
+          linkText: "Read handbook ➔"
+        },
+        {
+          icon: "🛡️",
+          title: "San Mateo Comitium",
+          desc: "Our regional governing council coordinating local parish praesidia and outreach missions across San Mateo County.",
+          url: "https://www.smccomitium.com/san-mateo-comitium",
+          linkText: "Visit Comitium ➔"
+        },
+        {
+          icon: "🏛️",
+          title: "SF Senatus",
+          desc: "The higher governing council administering the Legion of Mary across Northern California, Nevada, Utah, Oregon, Idaho, and Alaska.",
+          url: "https://www.sfsenatus.com",
+          linkText: "Visit Senatus ➔"
+        },
+        {
+          icon: "🎙️",
+          title: "Sunday Sermons",
+          desc: "Bishop Robert Barron's weekly podcast providing solid Catholic preaching, theological training, and spiritual formation for the battlefield of life.",
+          url: "https://podcasts.apple.com/us/podcast/bishop-barrons-sunday-sermons-catholic-preaching-and/id75551187",
+          linkText: "Listen podcast ➔"
+        }
+      ];
+
+      const defaultHero = {
+        tagline: "Mother of Divine Grace Praesidium",
+        title1: "Spiritual Combat.",
+        title2: "Devotion. Action.",
+        desc: "Empowering lay Catholics in San Mateo, California to glorify God through holiness, prayer, and active apostolic service under the banner of Mary Immaculate.",
+        image: "divinaegratiae_assets/marian_hero.png"
+      };
+
+      let campaignsData = JSON.parse(localStorage.getItem('lom_campaigns'));
+      let campaignsByYear = {};
+
+      if (campaignsData) {
+        if (Array.isArray(campaignsData)) {
+          // Migrate old flat array format under the year "2026"
+          campaignsByYear = { "2026": campaignsData };
+        } else if (campaignsData.years) {
+          campaignsByYear = campaignsData.years;
+        } else {
+          campaignsByYear = campaignsData;
+        }
+      } else {
+        campaignsByYear = { "2026": defaultCampaigns };
+      }
       
       // Auto-migrate old default August class to new workshop details
       let updated = false;
-      campaigns = campaigns.map(c => {
-        if (c.month === "August") {
-          let hasOldClass = false;
-          c.events = c.events.map(e => {
-            if (e.text === "Rosary Making Class") {
-              hasOldClass = true;
-              return { text: "Rosary Making Workshop", highlight: "Saturday, August 15th, 9:30–11:30 AM @ Worner Center. RSVP: stgregorylegionofmary@gmail.com" };
+      Object.keys(campaignsByYear).forEach(year => {
+        if (!Array.isArray(campaignsByYear[year])) return;
+        campaignsByYear[year] = campaignsByYear[year].map(c => {
+          if (c.month === "August") {
+            let hasOldClass = false;
+            c.events = c.events.map(e => {
+              if (e.text === "Rosary Making Class") {
+                hasOldClass = true;
+                return { text: "Rosary Making Workshop", highlight: "Saturday, August 15th, 9:30–11:30 AM @ Worner Center. RSVP: stgregorylegionofmary@gmail.com" };
+              }
+              return e;
+            });
+            if (hasOldClass) {
+              c.badge = "Workshop";
+              updated = true;
             }
-            return e;
-          });
-          if (hasOldClass) {
-            c.badge = "Workshop";
-            updated = true;
           }
-        }
-        return c;
+          return c;
+        });
       });
       if (updated) {
-        localStorage.setItem('lom_campaigns', JSON.stringify(campaigns));
+        localStorage.setItem('lom_campaigns', JSON.stringify(campaignsByYear));
       }
 
       let missions = JSON.parse(localStorage.getItem('lom_missions')) || defaultMissions;
+      let outreach = JSON.parse(localStorage.getItem('lom_outreach')) || defaultOutreach;
+      let resources = JSON.parse(localStorage.getItem('lom_resources')) || defaultResources;
+      let hero = JSON.parse(localStorage.getItem('lom_hero')) || defaultHero;
 
       // Make sure values are saved in localStorage
-      if (!localStorage.getItem('lom_campaigns')) localStorage.setItem('lom_campaigns', JSON.stringify(campaigns));
+      if (!localStorage.getItem('lom_campaigns')) localStorage.setItem('lom_campaigns', JSON.stringify(campaignsByYear));
       if (!localStorage.getItem('lom_missions')) localStorage.setItem('lom_missions', JSON.stringify(missions));
+      if (!localStorage.getItem('lom_outreach')) localStorage.setItem('lom_outreach', JSON.stringify(outreach));
+      if (!localStorage.getItem('lom_resources')) localStorage.setItem('lom_resources', JSON.stringify(resources));
+      if (!localStorage.getItem('lom_hero')) localStorage.setItem('lom_hero', JSON.stringify(hero));
+
+      // Render Hero Section
+      const heroTagline = document.querySelector('.hero-tagline');
+      const heroTitle = document.querySelector('.hero-title');
+      const heroDescription = document.querySelector('.hero-description');
+      const heroImage = document.querySelector('.hero-image');
+
+      if (heroTagline) heroTagline.innerText = hero.tagline || '';
+      if (heroTitle) {
+        heroTitle.innerHTML = `${escapeHtml(hero.title1 || '')}<span>${escapeHtml(hero.title2 || '')}</span>`;
+      }
+      if (heroDescription) heroDescription.innerText = hero.desc || '';
+      if (heroImage) {
+        heroImage.src = hero.image || '';
+      }
 
       // Render Campaigns
       const campaignsGrid = document.querySelector('.events-grid');
@@ -2397,17 +2503,38 @@
       
       const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
       const currentMonthIdx = new Date().getMonth();
+      const currentYearNum = new Date().getFullYear();
 
       const upcomingCampaigns = [];
       const pastCampaigns = [];
 
-      campaigns.forEach(c => {
-        const mIdx = monthNames.indexOf(c.month);
-        if (mIdx !== -1 && mIdx < currentMonthIdx) {
-          pastCampaigns.push(c);
-        } else {
-          upcomingCampaigns.push(c);
-        }
+      Object.keys(campaignsByYear).forEach(yearStr => {
+        const year = parseInt(yearStr, 10);
+        const yearCampaigns = campaignsByYear[yearStr];
+        if (!Array.isArray(yearCampaigns)) return;
+        
+        yearCampaigns.forEach(c => {
+          const mIdx = monthNames.indexOf(c.month);
+          if (mIdx !== -1) {
+            if (year < currentYearNum || (year === currentYearNum && mIdx < currentMonthIdx)) {
+              pastCampaigns.push({ ...c, year: year });
+            } else {
+              upcomingCampaigns.push({ ...c, year: year });
+            }
+          }
+        });
+      });
+
+      // Sort upcoming campaigns chronologically: year asc, month index asc
+      upcomingCampaigns.sort((a, b) => {
+        if (a.year !== b.year) return a.year - b.year;
+        return monthNames.indexOf(a.month) - monthNames.indexOf(b.month);
+      });
+
+      // Sort past campaigns chronologically: year asc, month index asc
+      pastCampaigns.sort((a, b) => {
+        if (a.year !== b.year) return a.year - b.year;
+        return monthNames.indexOf(a.month) - monthNames.indexOf(b.month);
       });
 
       function createCampaignCard(c) {
@@ -2415,7 +2542,7 @@
         card.className = 'event-card';
         
         let eventsHtml = '';
-        c.events.forEach(e => {
+        (c.events || []).forEach(e => {
           if (e.highlight) {
             eventsHtml += `
               <li class="event-item">
@@ -2429,7 +2556,7 @@
 
         card.innerHTML = `
           <div class="event-month-header">
-            <h3 class="event-month-title">${c.month}</h3>
+            <h3 class="event-month-title">${c.month} ${c.year}</h3>
             <span class="event-month-badge">${c.badge || ''}</span>
           </div>
           <ul class="event-list">
@@ -2454,22 +2581,26 @@
             pastGrid.appendChild(createCampaignCard(c));
           });
 
-          // Accordion trigger behavior
+          // Accordion trigger behavior (avoid adding duplicate listeners by checking/cloning or just re-adding since we clear content)
           const trigger = document.getElementById('previous-campaigns-trigger');
           const content = document.getElementById('previous-campaigns-content');
           if (trigger && content) {
-            trigger.addEventListener('click', function() {
-              const isActive = trigger.classList.contains('active');
+            // Remove previous event listeners if any, by replacing the button with a clone
+            const newTrigger = trigger.cloneNode(true);
+            trigger.parentNode.replaceChild(newTrigger, trigger);
+            
+            newTrigger.addEventListener('click', function() {
+              const isActive = newTrigger.classList.contains('active');
               if (isActive) {
-                trigger.classList.remove('active');
+                newTrigger.classList.remove('active');
                 content.classList.remove('active');
                 content.style.maxHeight = null;
-                trigger.querySelector('span:first-child').innerText = 'Show Past Campaigns';
+                newTrigger.querySelector('span:first-child').innerText = 'Show Past Campaigns';
               } else {
-                trigger.classList.add('active');
+                newTrigger.classList.add('active');
                 content.classList.add('active');
                 content.style.maxHeight = content.scrollHeight + 'px';
-                trigger.querySelector('span:first-child').innerText = 'Hide Past Campaigns';
+                newTrigger.querySelector('span:first-child').innerText = 'Hide Past Campaigns';
               }
             });
           }
@@ -2495,6 +2626,73 @@
             <p class="mission-description">${m.description}</p>
           `;
           missionsList.appendChild(item);
+        });
+      }
+
+      function escapeHtml(text) {
+        if (!text) return '';
+        return text
+          .toString()
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
+      }
+
+      // Render Outreach Cards (Apostolic Action)
+      const outreachGrid = document.querySelector('.outreach-grid');
+      if (outreachGrid) {
+        outreachGrid.innerHTML = '';
+        outreach.forEach(o => {
+          const card = document.createElement('div');
+          card.className = 'outreach-card';
+          if (o.hasFlyer) {
+            card.className = 'outreach-card clickable-card';
+            card.id = 'prison-ministry-card';
+          }
+          
+          card.innerHTML = `
+            <div class="outreach-icon">
+              ${o.icon || ''}
+            </div>
+            <h3 class="outreach-title">${escapeHtml(o.title)}</h3>
+            <p class="outreach-desc">${escapeHtml(o.desc)}</p>
+            ${o.hasFlyer ? '<span class="view-flyer-btn">View Flyer ➔</span>' : ''}
+          `;
+
+          if (o.hasFlyer) {
+            card.addEventListener('click', function() {
+              const modal = document.getElementById('flyer-modal');
+              if (modal) {
+                modal.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+              }
+            });
+          }
+          outreachGrid.appendChild(card);
+        });
+      }
+
+      // Render Resources & Directives
+      const resourcesGrid = document.querySelector('.resources-grid');
+      if (resourcesGrid) {
+        resourcesGrid.innerHTML = '';
+        resources.forEach(r => {
+          const card = document.createElement('a');
+          card.className = 'resource-card';
+          card.href = r.url || '#';
+          card.target = '_blank';
+          
+          card.innerHTML = `
+            <div>
+              <div class="resource-icon">${escapeHtml(r.icon || '📕')}</div>
+              <h3 class="resource-title">${escapeHtml(r.title)}</h3>
+              <p class="resource-desc">${escapeHtml(r.desc)}</p>
+            </div>
+            <div class="resource-link-text">${escapeHtml(r.linkText || 'Read handbook ➔')}</div>
+          `;
+          resourcesGrid.appendChild(card);
         });
       }
 

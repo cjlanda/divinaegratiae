@@ -437,6 +437,89 @@
       z-index: 1000;
       border-left: 4px solid var(--accent-gold);
     }
+
+    /* Year Accordion Styling */
+    .campaigns-control-bar {
+      margin-bottom: 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+    }
+
+    .year-section {
+      background: #ffffff;
+      border: 1px solid var(--border-color);
+      border-radius: 8px;
+      margin-bottom: 20px;
+      overflow: hidden;
+      box-shadow: var(--shadow-soft);
+    }
+
+    .year-header {
+      background: var(--bg-tertiary);
+      padding: 15px 20px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      cursor: pointer;
+      user-select: none;
+      transition: background-color 0.3s ease;
+    }
+
+    .year-header:hover {
+      background: #d4e6f9;
+    }
+
+    .year-title {
+      font-family: var(--font-headers);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .year-header-actions {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .year-toggle-icon {
+      font-size: 16px;
+      color: var(--text-secondary);
+      transition: transform 0.3s ease;
+    }
+
+    .year-section.collapsed .year-toggle-icon {
+      transform: rotate(-90deg);
+    }
+
+    .year-content {
+      padding: 20px;
+      display: block;
+    }
+
+    .year-section.collapsed .year-content {
+      display: none;
+    }
+
+    .btn-delete-year {
+      background: none;
+      border: none;
+      color: var(--accent-crimson);
+      cursor: pointer;
+      font-size: 12px;
+      font-weight: 600;
+      padding: 4px 8px;
+      border-radius: 4px;
+      transition: background-color 0.2s;
+    }
+
+    .btn-delete-year:hover {
+      background-color: rgba(168, 32, 42, 0.1);
+    }
   </style>
 </head>
 <body>
@@ -472,12 +555,19 @@
     <div class="tabs">
       <button class="tab-btn active" onclick="switchTab(event, 'campaigns-tab')">Upcoming Campaigns</button>
       <button class="tab-btn" onclick="switchTab(event, 'missions-tab')">Open Missions</button>
+      <button class="tab-btn" onclick="switchTab(event, 'outreach-tab')">Apostolic Action</button>
+      <button class="tab-btn" onclick="switchTab(event, 'resources-tab')">Resources & Directives</button>
+      <button class="tab-btn" onclick="switchTab(event, 'hero-tab')">Landing Section</button>
     </div>
 
     <!-- Campaigns Editor Tab -->
     <div id="campaigns-tab" class="tab-content active">
-      <div class="months-editor" id="months-list-container">
-        <!-- Javascript renders months here -->
+      <div class="campaigns-control-bar">
+        <h3 style="font-family: var(--font-headers); color: var(--text-primary);">Campaign Years</h3>
+        <button onclick="addNewYear()" class="btn-action btn-save">+ Add New Year</button>
+      </div>
+      <div id="years-container">
+        <!-- Javascript renders years and months here -->
       </div>
     </div>
 
@@ -489,6 +579,60 @@
         </div>
         <div class="add-mission-bar">
           <button onclick="addNewMission()" class="btn-add-mission">+ Add New Open Mission</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Apostolic Action Tab -->
+    <div id="outreach-tab" class="tab-content">
+      <div class="missions-editor">
+        <div id="outreach-list-container">
+          <!-- Javascript renders outreach cards here -->
+        </div>
+        <div class="add-mission-bar">
+          <button onclick="addNewOutreach()" class="btn-add-mission">+ Add New Action Card</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Resources & Directives Tab -->
+    <div id="resources-tab" class="tab-content">
+      <div class="missions-editor">
+        <div id="resources-list-container">
+          <!-- Javascript renders resources here -->
+        </div>
+        <div class="add-mission-bar">
+          <button onclick="addNewResource()" class="btn-add-mission">+ Add New Resource Link</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- Landing Section Tab -->
+    <div id="hero-tab" class="tab-content">
+      <div class="missions-editor">
+        <div class="mission-card">
+          <div style="margin-bottom: 15px;">
+            <label style="font-size: 11px; font-weight: 600; text-transform: uppercase; display: block; margin-bottom: 4px; color: var(--text-secondary);">Tagline</label>
+            <input type="text" class="event-text-input" style="width: 100%;" id="hero-tagline-input" onchange="updateHeroField('tagline', this.value)">
+          </div>
+          <div style="margin-bottom: 15px; display: flex; gap: 15px;">
+            <div style="flex: 1;">
+              <label style="font-size: 11px; font-weight: 600; text-transform: uppercase; display: block; margin-bottom: 4px; color: var(--text-secondary);">Title Line 1</label>
+              <input type="text" class="event-text-input" style="width: 100%;" id="hero-title1-input" onchange="updateHeroField('title1', this.value)">
+            </div>
+            <div style="flex: 1;">
+              <label style="font-size: 11px; font-weight: 600; text-transform: uppercase; display: block; margin-bottom: 4px; color: var(--text-secondary);">Title Line 2</label>
+              <input type="text" class="event-text-input" style="width: 100%;" id="hero-title2-input" onchange="updateHeroField('title2', this.value)">
+            </div>
+          </div>
+          <div style="margin-bottom: 15px;">
+            <label style="font-size: 11px; font-weight: 600; text-transform: uppercase; display: block; margin-bottom: 4px; color: var(--text-secondary);">Description</label>
+            <textarea class="mission-desc-textarea" style="height: 100px;" id="hero-desc-input" onchange="updateHeroField('desc', this.value)"></textarea>
+          </div>
+          <div style="margin-bottom: 15px;">
+            <label style="font-size: 11px; font-weight: 600; text-transform: uppercase; display: block; margin-bottom: 4px; color: var(--text-secondary);">Hero Image URL / Path</label>
+            <input type="text" class="event-text-input" style="width: 100%;" id="hero-image-input" onchange="updateHeroField('image', this.value)">
+          </div>
         </div>
       </div>
     </div>
@@ -627,76 +771,293 @@
       }
     ];
 
-    let currentCampaigns = [];
+    const defaultOutreach = [
+      {
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 32px; height: 32px;"><rect x="5" y="3" width="14" height="18" rx="2" ry="2"/><path d="M12 7v8M9.5 10h5"/></svg>`,
+        title: "Legion Book Barrow",
+        desc: "A portable stand, table, or cart used for street evangelization and public distribution of religious literature, prayer cards, and sacramentals (no book lending)."
+      },
+      {
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 32px; height: 32px;"><rect x="3" y="3" width="18" height="18" rx="2"/><path d="M12 8v8M8 12h8"/></svg>`,
+        title: "Brookside Nursing Home",
+        desc: "Weekly visitations providing companionship, rosary recitation, and spiritual consolation to residents."
+      },
+      {
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 32px; height: 32px;"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>`,
+        title: "Door Knocking",
+        desc: "Visiting local families in their homes to offer prayers, introduce the parish, and share blessings."
+      },
+      {
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 32px; height: 32px;"><circle cx="12" cy="12" r="9"/><path d="M12 7v10M8.5 12h7"/></svg>`,
+        title: "Homebound Communion",
+        desc: "Serving as a living bridge between the parish church and members unable to attend Mass by bringing them the Holy Eucharist."
+      },
+      {
+        icon: `<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 32px; height: 32px;"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="9" y1="3" x2="9" y2="21"/><line x1="15" y1="3" x2="15" y2="21"/></svg>`,
+        title: "Prison Ministry",
+        desc: "Outreach and spiritual guidance to youth incarcerated in local juvenile facilities, bringing hope and Catholic materials.",
+        hasFlyer: true
+      }
+    ];
+
+    const defaultResources = [
+      {
+        icon: "📕",
+        title: "Official Handbook",
+        desc: "The primary tactical guide and rulebook defining the administration, spiritual framework, and duties of the Legion of Mary (2024 PDF Edition).",
+        url: "https://legionofmary.ie/images/uploads/files/The_Official_Handbook_of_the_Legion_of_Mary_%28Ed._2024%29_.pdf",
+        linkText: "Read handbook ➔"
+      },
+      {
+        icon: "🛡️",
+        title: "San Mateo Comitium",
+        desc: "Our regional governing council coordinating local parish praesidia and outreach missions across San Mateo County.",
+        url: "https://www.smccomitium.com/san-mateo-comitium",
+        linkText: "Visit Comitium ➔"
+      },
+      {
+        icon: "🏛️",
+        title: "SF Senatus",
+        desc: "The higher governing council administering the Legion of Mary across Northern California, Nevada, Utah, Oregon, Idaho, and Alaska.",
+        url: "https://www.sfsenatus.com",
+        linkText: "Visit Senatus ➔"
+      },
+      {
+        icon: "🎙️",
+        title: "Sunday Sermons",
+        desc: "Bishop Robert Barron's weekly podcast providing solid Catholic preaching, theological training, and spiritual formation for the battlefield of life.",
+        url: "https://podcasts.apple.com/us/podcast/bishop-barrons-sunday-sermons-catholic-preaching-and/id75551187",
+        linkText: "Listen podcast ➔"
+      }
+    ];
+
+    const defaultHero = {
+      tagline: "Mother of Divine Grace Praesidium",
+      title1: "Spiritual Combat.",
+      title2: "Devotion. Action.",
+      desc: "Empowering lay Catholics in San Mateo, California to glorify God through holiness, prayer, and active apostolic service under the banner of Mary Immaculate.",
+      image: "divinaegratiae_assets/marian_hero.png"
+    };
+
+    let currentCampaigns = {};
+    let collapsedYears = {};
     let currentMissions = [];
+    let currentOutreach = [];
+    let currentResources = [];
+    let currentHero = {};
 
     // Load Data
     function loadDashboardData() {
       let savedCampaigns = JSON.parse(localStorage.getItem('lom_campaigns'));
-      currentCampaigns = savedCampaigns ? savedCampaigns : [...defaultCampaigns];
       
-      // Auto-update August class to workshop if old defaults are found
-      let updated = false;
-      currentCampaigns = currentCampaigns.map(c => {
-        if (c.month === "August") {
-          let hasOldClass = false;
-          c.events = c.events.map(e => {
-            if (e.text === "Rosary Making Class") {
-              hasOldClass = true;
-              return { text: "Rosary Making Workshop", highlight: "Saturday, August 15th, 9:30–11:30 AM @ Worner Center. RSVP: stgregorylegionofmary@gmail.com" };
-            }
-            return e;
-          });
-          if (hasOldClass) {
-            c.badge = "Workshop";
-            updated = true;
-          }
+      if (savedCampaigns) {
+        if (Array.isArray(savedCampaigns)) {
+          // Migrate old flat array format under the year "2026"
+          currentCampaigns = { "2026": savedCampaigns };
+        } else if (savedCampaigns.years) {
+          currentCampaigns = savedCampaigns.years;
+        } else {
+          currentCampaigns = savedCampaigns;
         }
-        return c;
+      } else {
+        currentCampaigns = { "2026": JSON.parse(JSON.stringify(defaultCampaigns)) };
+      }
+      
+      // Auto-update August class to workshop if old defaults are found in any year
+      let updated = false;
+      Object.keys(currentCampaigns).forEach(year => {
+        if (!Array.isArray(currentCampaigns[year])) return;
+        currentCampaigns[year] = currentCampaigns[year].map(c => {
+          if (c.month === "August") {
+            let hasOldClass = false;
+            c.events = c.events.map(e => {
+              if (e.text === "Rosary Making Class") {
+                hasOldClass = true;
+                return { text: "Rosary Making Workshop", highlight: "Saturday, August 15th, 9:30–11:30 AM @ Worner Center. RSVP: stgregorylegionofmary@gmail.com" };
+              }
+              return e;
+            });
+            if (hasOldClass) {
+              c.badge = "Workshop";
+              updated = true;
+            }
+          }
+          return c;
+        });
       });
       if (updated) {
         localStorage.setItem('lom_campaigns', JSON.stringify(currentCampaigns));
       }
+
+      // Initialize collapse states for years
+      const currentYearNum = new Date().getFullYear();
+      Object.keys(currentCampaigns).forEach(year => {
+        if (collapsedYears[year] === undefined) {
+          collapsedYears[year] = (parseInt(year) !== currentYearNum);
+        }
+      });
       
       let savedMissions = JSON.parse(localStorage.getItem('lom_missions'));
       currentMissions = savedMissions ? savedMissions : [...defaultMissions];
       
+      let savedOutreach = JSON.parse(localStorage.getItem('lom_outreach'));
+      currentOutreach = savedOutreach ? savedOutreach : JSON.parse(JSON.stringify(defaultOutreach));
+      
+      let savedResources = JSON.parse(localStorage.getItem('lom_resources'));
+      currentResources = savedResources ? savedResources : JSON.parse(JSON.stringify(defaultResources));
+
+      let savedHero = JSON.parse(localStorage.getItem('lom_hero'));
+      currentHero = savedHero ? savedHero : JSON.parse(JSON.stringify(defaultHero));
+
+      // Populate Hero editor fields if elements exist
+      if (document.getElementById('hero-tagline-input')) {
+        document.getElementById('hero-tagline-input').value = currentHero.tagline || '';
+        document.getElementById('hero-title1-input').value = currentHero.title1 || '';
+        document.getElementById('hero-title2-input').value = currentHero.title2 || '';
+        document.getElementById('hero-desc-input').value = currentHero.desc || '';
+        document.getElementById('hero-image-input').value = currentHero.image || '';
+      }
+
       renderCampaignsEditor();
       renderMissionsEditor();
+      renderOutreachEditor();
+      renderResourcesEditor();
     }
 
     // Render Campaigns Editor
     function renderCampaignsEditor() {
-      const container = document.getElementById('months-list-container');
+      const container = document.getElementById('years-container');
+      if (!container) return;
       container.innerHTML = '';
       
-      currentCampaigns.forEach((c, monthIndex) => {
-        const monthCard = document.createElement('div');
-        monthCard.className = 'month-card';
+      const sortedYears = Object.keys(currentCampaigns).sort((a, b) => parseInt(a) - parseInt(b));
+      
+      if (sortedYears.length === 0) {
+        container.innerHTML = '<p style="color: var(--text-secondary); text-align: center; padding: 20px;">No campaigns configured. Click "+ Add New Year" to start.</p>';
+        return;
+      }
+      
+      sortedYears.forEach(year => {
+        const yearSection = document.createElement('div');
+        yearSection.className = 'year-section';
+        if (collapsedYears[year]) {
+          yearSection.classList.add('collapsed');
+        }
         
-        let eventsEditorHtml = '';
-        c.events.forEach((e, eventIndex) => {
-          eventsEditorHtml += `
-            <li class="event-editor-item">
-              <button class="delete-btn" onclick="deleteEvent(${monthIndex}, ${eventIndex})">✕</button>
-              <input type="text" class="event-text-input" value="${escapeHtml(e.text)}" placeholder="Event title..." onchange="updateEventText(${monthIndex}, ${eventIndex}, this.value)">
-              <input type="text" class="event-highlight-input" value="${escapeHtml(e.highlight)}" placeholder="Optional highlight detail (e.g. date & location)..." onchange="updateEventHighlight(${monthIndex}, ${eventIndex}, this.value)">
-            </li>`;
+        // Header
+        const header = document.createElement('div');
+        header.className = 'year-header';
+        header.onclick = (e) => {
+          if (e.target.classList.contains('btn-delete-year')) return;
+          toggleYearCollapse(year);
+        };
+        
+        const title = document.createElement('div');
+        title.className = 'year-title';
+        title.innerHTML = `<span>📅</span> ${year}`;
+        
+        const actions = document.createElement('div');
+        actions.className = 'year-header-actions';
+        
+        const deleteBtn = document.createElement('button');
+        deleteBtn.className = 'btn-delete-year';
+        deleteBtn.innerText = 'Delete Year';
+        deleteBtn.onclick = (e) => {
+          e.stopPropagation();
+          deleteYear(year);
+        };
+        
+        const toggleIcon = document.createElement('span');
+        toggleIcon.className = 'year-toggle-icon';
+        toggleIcon.innerText = '▼';
+        
+        actions.appendChild(deleteBtn);
+        actions.appendChild(toggleIcon);
+        header.appendChild(title);
+        header.appendChild(actions);
+        yearSection.appendChild(header);
+        
+        // Content (months)
+        const content = document.createElement('div');
+        content.className = 'year-content';
+        
+        const monthsEditor = document.createElement('div');
+        monthsEditor.className = 'months-editor';
+        
+        const monthsList = currentCampaigns[year] || [];
+        monthsList.forEach((c, monthIndex) => {
+          const monthCard = document.createElement('div');
+          monthCard.className = 'month-card';
+          
+          let eventsEditorHtml = '';
+          (c.events || []).forEach((e, eventIndex) => {
+            eventsEditorHtml += `
+              <li class="event-editor-item">
+                <button class="delete-btn" onclick="deleteEvent('${year}', ${monthIndex}, ${eventIndex})">✕</button>
+                <input type="text" class="event-text-input" value="${escapeHtml(e.text)}" placeholder="Event title..." onchange="updateEventText('${year}', ${monthIndex}, ${eventIndex}, this.value)">
+                <input type="text" class="event-highlight-input" value="${escapeHtml(e.highlight)}" placeholder="Optional highlight detail (e.g. date & location)..." onchange="updateEventHighlight('${year}', ${monthIndex}, ${eventIndex}, this.value)">
+              </li>`;
+          });
+          
+          monthCard.innerHTML = `
+            <div class="month-header">
+              <span class="month-name">${c.month}</span>
+              <input type="text" class="month-badge-input" value="${escapeHtml(c.badge || '')}" placeholder="Badge label..." onchange="updateMonthBadge('${year}', ${monthIndex}, this.value)">
+            </div>
+            <ul class="event-editor-list">
+              ${eventsEditorHtml}
+            </ul>
+            <button onclick="addEvent('${year}', ${monthIndex})" class="add-event-btn">+ Add Event</button>
+          `;
+          monthsEditor.appendChild(monthCard);
         });
         
-        monthCard.innerHTML = `
-          <div class="month-header">
-            <span class="month-name">${c.month}</span>
-            <input type="text" class="month-badge-input" value="${escapeHtml(c.badge || '')}" placeholder="Badge label..." onchange="updateMonthBadge(${monthIndex}, this.value)">
-          </div>
-          <ul class="event-editor-list">
-            ${eventsEditorHtml}
-          </ul>
-          <button onclick="addEvent(${monthIndex})" class="add-event-btn">+ Add Event</button>
-        `;
-        
-        container.appendChild(monthCard);
+        content.appendChild(monthsEditor);
+        yearSection.appendChild(content);
+        container.appendChild(yearSection);
       });
+    }
+
+    // Toggle collapsible year
+    function toggleYearCollapse(year) {
+      collapsedYears[year] = !collapsedYears[year];
+      renderCampaignsEditor();
+    }
+
+    // Add new year
+    function addNewYear() {
+      const year = prompt("Enter new year (e.g., 2027):");
+      if (year === null) return;
+      
+      const trimmedYear = year.trim();
+      if (!/^\d{4}$/.test(trimmedYear)) {
+        alert("Please enter a valid 4-digit year.");
+        return;
+      }
+      
+      if (currentCampaigns[trimmedYear]) {
+        alert(`Year ${trimmedYear} already exists.`);
+        return;
+      }
+      
+      const months = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+      currentCampaigns[trimmedYear] = months.map(m => ({
+        month: m,
+        badge: "",
+        events: []
+      }));
+      
+      collapsedYears[trimmedYear] = false;
+      renderCampaignsEditor();
+    }
+
+    // Delete a year
+    function deleteYear(year) {
+      if (confirm(`Are you sure you want to delete all campaigns for the year ${year}?`)) {
+        delete currentCampaigns[year];
+        delete collapsedYears[year];
+        renderCampaignsEditor();
+      }
     }
 
     // Render Missions Editor
@@ -721,25 +1082,30 @@
     }
 
     // Update Functions for Campaigns
-    function updateMonthBadge(mIdx, val) {
-      currentCampaigns[mIdx].badge = val;
+    function updateMonthBadge(year, mIdx, val) {
+      currentCampaigns[year][mIdx].badge = val;
     }
     
-    function updateEventText(mIdx, eIdx, val) {
-      currentCampaigns[mIdx].events[eIdx].text = val;
+    function updateEventText(year, mIdx, eIdx, val) {
+      currentCampaigns[year][mIdx].events[eIdx].text = val;
     }
     
-    function updateEventHighlight(mIdx, eIdx, val) {
-      currentCampaigns[mIdx].events[eIdx].highlight = val;
+    function updateEventHighlight(year, mIdx, eIdx, val) {
+      currentCampaigns[year][mIdx].events[eIdx].highlight = val;
     }
     
-    function deleteEvent(mIdx, eIdx) {
-      currentCampaigns[mIdx].events.splice(eIdx, 1);
+    // Updated deleteEvent to accept year
+    function deleteEvent(year, mIdx, eIdx) {
+      currentCampaigns[year][mIdx].events.splice(eIdx, 1);
       renderCampaignsEditor();
     }
     
-    function addEvent(mIdx) {
-      currentCampaigns[mIdx].events.push({ text: "New Event Title", highlight: "" });
+    // Updated addEvent to accept year
+    function addEvent(year, mIdx) {
+      if (!currentCampaigns[year][mIdx].events) {
+        currentCampaigns[year][mIdx].events = [];
+      }
+      currentCampaigns[year][mIdx].events.push({ text: "New Event Title", highlight: "" });
       renderCampaignsEditor();
     }
 
@@ -770,13 +1136,147 @@
       renderMissionsEditor();
     }
 
+    // Render Outreach Editor
+    function renderOutreachEditor() {
+      const container = document.getElementById('outreach-list-container');
+      if (!container) return;
+      container.innerHTML = '';
+      
+      currentOutreach.forEach((o, idx) => {
+        const oCard = document.createElement('div');
+        oCard.className = 'mission-card';
+        oCard.innerHTML = `
+          <div class="mission-card-header">
+            <input type="text" class="mission-name-input" value="${escapeHtml(o.title)}" placeholder="Outreach Title..." onchange="updateOutreachField(${idx}, 'title', this.value)">
+            <label style="font-size: 12px; font-weight: 600; display: inline-flex; align-items: center; gap: 4px; color: var(--text-secondary);">
+              <input type="checkbox" ${o.hasFlyer ? 'checked' : ''} onchange="updateOutreachField(${idx}, 'hasFlyer', this.checked)">
+              Link Flyer Modal
+            </label>
+          </div>
+          <div style="margin-bottom: 12px;">
+            <label style="font-size: 11px; font-weight: 600; text-transform: uppercase; display: block; margin-bottom: 4px; color: var(--text-secondary);">SVG Icon Markup</label>
+            <textarea class="mission-desc-textarea" style="height: 60px; font-family: monospace;" placeholder="SVG markup code here..." onchange="updateOutreachField(${idx}, 'icon', this.value)">${escapeHtml(o.icon || '')}</textarea>
+          </div>
+          <div>
+            <label style="font-size: 11px; font-weight: 600; text-transform: uppercase; display: block; margin-bottom: 4px; color: var(--text-secondary);">Description</label>
+            <textarea class="mission-desc-textarea" style="height: 80px;" placeholder="Description..." onchange="updateOutreachField(${idx}, 'desc', this.value)">${escapeHtml(o.desc || '')}</textarea>
+          </div>
+          <button onclick="deleteOutreach(${idx})" class="mission-delete-btn" style="margin-top: 15px;">Delete Action Card</button>
+          <div style="clear: both;"></div>
+        `;
+        container.appendChild(oCard);
+      });
+    }
+
+    function updateOutreachField(idx, field, val) {
+      currentOutreach[idx][field] = val;
+    }
+
+    function deleteOutreach(idx) {
+      if (confirm("Are you sure you want to delete this outreach action card?")) {
+        currentOutreach.splice(idx, 1);
+        renderOutreachEditor();
+      }
+    }
+
+    function addNewOutreach() {
+      currentOutreach.push({
+        icon: '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width: 32px; height: 32px;"><circle cx="12" cy="12" r="10"/><path d="M12 8v8M8 12h8"/></svg>',
+        title: "New Apostolic Outreach",
+        desc: "Describe the outreach and apostolic service details here."
+      });
+      renderOutreachEditor();
+    }
+
+    // Render Resources Editor
+    function renderResourcesEditor() {
+      const container = document.getElementById('resources-list-container');
+      if (!container) return;
+      container.innerHTML = '';
+      
+      currentResources.forEach((r, idx) => {
+        const rCard = document.createElement('div');
+        rCard.className = 'mission-card';
+        rCard.innerHTML = `
+          <div class="mission-card-header">
+            <input type="text" class="mission-name-input" style="width: 70%;" value="${escapeHtml(r.title)}" placeholder="Resource Title..." onchange="updateResourceField(${idx}, 'title', this.value)">
+            <input type="text" class="mission-status-input" style="width: 25%; text-align: center;" value="${escapeHtml(r.icon || '📕')}" placeholder="Icon (e.g. 📕)" onchange="updateResourceField(${idx}, 'icon', this.value)">
+          </div>
+          <div style="margin-bottom: 12px; display: flex; gap: 10px;">
+            <div style="flex-grow: 1;">
+              <label style="font-size: 11px; font-weight: 600; text-transform: uppercase; display: block; margin-bottom: 4px; color: var(--text-secondary);">Link URL</label>
+              <input type="text" class="event-text-input" style="width: 100%;" value="${escapeHtml(r.url || '')}" placeholder="https://..." onchange="updateResourceField(${idx}, 'url', this.value)">
+            </div>
+            <div style="width: 200px;">
+              <label style="font-size: 11px; font-weight: 600; text-transform: uppercase; display: block; margin-bottom: 4px; color: var(--text-secondary);">Link Action Text</label>
+              <input type="text" class="event-text-input" style="width: 100%;" value="${escapeHtml(r.linkText || 'Read handbook ➔')}" placeholder="Read handbook ➔" onchange="updateResourceField(${idx}, 'linkText', this.value)">
+            </div>
+          </div>
+          <div>
+            <label style="font-size: 11px; font-weight: 600; text-transform: uppercase; display: block; margin-bottom: 4px; color: var(--text-secondary);">Description</label>
+            <textarea class="mission-desc-textarea" style="height: 80px;" placeholder="Description..." onchange="updateResourceField(${idx}, 'desc', this.value)">${escapeHtml(r.desc || '')}</textarea>
+          </div>
+          <button onclick="deleteResource(${idx})" class="mission-delete-btn" style="margin-top: 15px;">Delete Resource Link</button>
+          <div style="clear: both;"></div>
+        `;
+        container.appendChild(rCard);
+      });
+    }
+
+    function updateResourceField(idx, field, val) {
+      currentResources[idx][field] = val;
+    }
+
+    function deleteResource(idx) {
+      if (confirm("Are you sure you want to delete this resource link?")) {
+        currentResources.splice(idx, 1);
+        renderResourcesEditor();
+      }
+    }
+
+    function addNewResource() {
+      currentResources.push({
+        icon: "🔗",
+        title: "New Resource Link",
+        desc: "Describe the content and purpose of this resource here.",
+        url: "https://",
+        linkText: "Visit site ➔"
+      });
+      renderResourcesEditor();
+    }
+
+    function updateHeroField(field, val) {
+      currentHero[field] = val;
+    }
+
     // Reset Defaults
     function resetToDefaults() {
-      if (confirm("Are you sure you want to reset all campaigns and open missions to default values?")) {
-        currentCampaigns = JSON.parse(JSON.stringify(defaultCampaigns));
+      if (confirm("Are you sure you want to reset all campaigns, open missions, outreach cards, resource links, and the landing section to default values?")) {
+        currentCampaigns = { "2026": JSON.parse(JSON.stringify(defaultCampaigns)) };
         currentMissions = JSON.parse(JSON.stringify(defaultMissions));
+        currentOutreach = JSON.parse(JSON.stringify(defaultOutreach));
+        currentResources = JSON.parse(JSON.stringify(defaultResources));
+        currentHero = JSON.parse(JSON.stringify(defaultHero));
+        
+        collapsedYears = {};
+        const currentYearNum = new Date().getFullYear();
+        Object.keys(currentCampaigns).forEach(year => {
+          collapsedYears[year] = (parseInt(year) !== currentYearNum);
+        });
+
+        // Repopulate Hero inputs
+        if (document.getElementById('hero-tagline-input')) {
+          document.getElementById('hero-tagline-input').value = currentHero.tagline || '';
+          document.getElementById('hero-title1-input').value = currentHero.title1 || '';
+          document.getElementById('hero-title2-input').value = currentHero.title2 || '';
+          document.getElementById('hero-desc-input').value = currentHero.desc || '';
+          document.getElementById('hero-image-input').value = currentHero.image || '';
+        }
+
         renderCampaignsEditor();
         renderMissionsEditor();
+        renderOutreachEditor();
+        renderResourcesEditor();
         showToast("Reset to defaults! Click 'Save & Deploy' to save.");
       }
     }
@@ -785,6 +1285,9 @@
     function saveChanges() {
       localStorage.setItem('lom_campaigns', JSON.stringify(currentCampaigns));
       localStorage.setItem('lom_missions', JSON.stringify(currentMissions));
+      localStorage.setItem('lom_outreach', JSON.stringify(currentOutreach));
+      localStorage.setItem('lom_resources', JSON.stringify(currentResources));
+      localStorage.setItem('lom_hero', JSON.stringify(currentHero));
       showToast("Changes saved and deployed to live site!");
     }
 
