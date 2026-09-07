@@ -2271,6 +2271,39 @@
       </div>
     </div>
 
+  <!-- Firebase Modular SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+    import { getFirestore, doc, getDoc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDHP2rf4FousJsYS8BHBYcGu-QY3UfC8vk",
+      authDomain: "legion-of-mary-san-mateo.firebaseapp.com",
+      projectId: "legion-of-mary-san-mateo",
+      storageBucket: "legion-of-mary-san-mateo.firebasestorage.app",
+      messagingSenderId: "276962319084",
+      appId: "1:276962319084:web:632d5cb39da449f602a3c9"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.firebaseStorage = {
+      async loadData() {
+        const docRef = doc(db, "site_content", "main");
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          return docSnap.data();
+        }
+        return null;
+      }
+    };
+
+    if (typeof window.onFirebaseReady === 'function') {
+      window.onFirebaseReady();
+    }
+  </script>
+
   <!-- Page Logic (Interactivity) -->
   <script>
     document.addEventListener('DOMContentLoaded', function() {
@@ -2481,61 +2514,16 @@
       if (!localStorage.getItem('lom_resources')) localStorage.setItem('lom_resources', JSON.stringify(resources));
       if (!localStorage.getItem('lom_hero')) localStorage.setItem('lom_hero', JSON.stringify(hero));
 
-      // Render Hero Section
-      const heroTagline = document.querySelector('.hero-tagline');
-      const heroTitle = document.querySelector('.hero-title');
-      const heroDescription = document.querySelector('.hero-description');
-      const heroImage = document.querySelector('.hero-image');
-
-      if (heroTagline) heroTagline.innerText = hero.tagline || '';
-      if (heroTitle) {
-        heroTitle.innerHTML = `${escapeHtml(hero.title1 || '')}<span>${escapeHtml(hero.title2 || '')}</span>`;
+      function escapeHtml(text) {
+        if (!text) return '';
+        return text
+          .toString()
+          .replace(/&/g, "&amp;")
+          .replace(/</g, "&lt;")
+          .replace(/>/g, "&gt;")
+          .replace(/"/g, "&quot;")
+          .replace(/'/g, "&#039;");
       }
-      if (heroDescription) heroDescription.innerText = hero.desc || '';
-      if (heroImage) {
-        heroImage.src = hero.image || '';
-      }
-
-      // Render Campaigns
-      const campaignsGrid = document.querySelector('.events-grid');
-      const pastGrid = document.querySelector('.previous-events-grid');
-      const pastSection = document.getElementById('previous-campaigns-section');
-      
-      const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
-      const currentMonthIdx = new Date().getMonth();
-      const currentYearNum = new Date().getFullYear();
-
-      const upcomingCampaigns = [];
-      const pastCampaigns = [];
-
-      Object.keys(campaignsByYear).forEach(yearStr => {
-        const year = parseInt(yearStr, 10);
-        const yearCampaigns = campaignsByYear[yearStr];
-        if (!Array.isArray(yearCampaigns)) return;
-        
-        yearCampaigns.forEach(c => {
-          const mIdx = monthNames.indexOf(c.month);
-          if (mIdx !== -1) {
-            if (year < currentYearNum || (year === currentYearNum && mIdx < currentMonthIdx)) {
-              pastCampaigns.push({ ...c, year: year });
-            } else {
-              upcomingCampaigns.push({ ...c, year: year });
-            }
-          }
-        });
-      });
-
-      // Sort upcoming campaigns chronologically: year asc, month index asc
-      upcomingCampaigns.sort((a, b) => {
-        if (a.year !== b.year) return a.year - b.year;
-        return monthNames.indexOf(a.month) - monthNames.indexOf(b.month);
-      });
-
-      // Sort past campaigns chronologically: year asc, month index asc
-      pastCampaigns.sort((a, b) => {
-        if (a.year !== b.year) return a.year - b.year;
-        return monthNames.indexOf(a.month) - monthNames.indexOf(b.month);
-      });
 
       function createCampaignCard(c) {
         const card = document.createElement('div');
@@ -2566,135 +2554,240 @@
         return card;
       }
 
-      if (campaignsGrid) {
-        campaignsGrid.innerHTML = '';
-        upcomingCampaigns.forEach(c => {
-          campaignsGrid.appendChild(createCampaignCard(c));
-        });
+      // Render Hero Section
+      function renderHero(heroData) {
+        if (!heroData) return;
+        const heroTagline = document.querySelector('.hero-tagline');
+        const heroTitle = document.querySelector('.hero-title');
+        const heroDescription = document.querySelector('.hero-description');
+        const heroImage = document.querySelector('.hero-image');
+
+        if (heroTagline) heroTagline.innerText = heroData.tagline || '';
+        if (heroTitle) {
+          heroTitle.innerHTML = `${escapeHtml(heroData.title1 || '')}<span>${escapeHtml(heroData.title2 || '')}</span>`;
+        }
+        if (heroDescription) heroDescription.innerText = heroData.desc || '';
+        if (heroImage && heroData.image) {
+          heroImage.src = heroData.image;
+        }
       }
 
-      if (pastCampaigns.length > 0) {
-        if (pastSection && pastGrid) {
-          pastSection.style.display = 'block';
-          pastGrid.innerHTML = '';
-          pastCampaigns.forEach(c => {
-            pastGrid.appendChild(createCampaignCard(c));
-          });
+      // Render Campaigns
+      function renderCampaigns(campaignsDataMap) {
+        if (!campaignsDataMap) return;
+        const campaignsGrid = document.querySelector('.events-grid');
+        const pastGrid = document.querySelector('.previous-events-grid');
+        const pastSection = document.getElementById('previous-campaigns-section');
+        
+        const monthNames = ["January", "February", "March", "April", "May", "June", "July", "August", "September", "October", "November", "December"];
+        const currentMonthIdx = new Date().getMonth();
+        const currentYearNum = new Date().getFullYear();
 
-          // Accordion trigger behavior (avoid adding duplicate listeners by checking/cloning or just re-adding since we clear content)
-          const trigger = document.getElementById('previous-campaigns-trigger');
-          const content = document.getElementById('previous-campaigns-content');
-          if (trigger && content) {
-            // Remove previous event listeners if any, by replacing the button with a clone
-            const newTrigger = trigger.cloneNode(true);
-            trigger.parentNode.replaceChild(newTrigger, trigger);
-            
-            newTrigger.addEventListener('click', function() {
-              const isActive = newTrigger.classList.contains('active');
-              if (isActive) {
-                newTrigger.classList.remove('active');
-                content.classList.remove('active');
-                content.style.maxHeight = null;
-                newTrigger.querySelector('span:first-child').innerText = 'Show Past Campaigns';
+        const upcomingCampaigns = [];
+        const pastCampaigns = [];
+
+        Object.keys(campaignsDataMap).forEach(yearStr => {
+          const year = parseInt(yearStr, 10);
+          const yearCampaigns = campaignsDataMap[yearStr];
+          if (!Array.isArray(yearCampaigns)) return;
+          
+          yearCampaigns.forEach(c => {
+            const mIdx = monthNames.indexOf(c.month);
+            if (mIdx !== -1) {
+              if (year < currentYearNum || (year === currentYearNum && mIdx < currentMonthIdx)) {
+                pastCampaigns.push({ ...c, year: year });
               } else {
-                newTrigger.classList.add('active');
-                content.classList.add('active');
-                content.style.maxHeight = content.scrollHeight + 'px';
-                newTrigger.querySelector('span:first-child').innerText = 'Hide Past Campaigns';
+                upcomingCampaigns.push({ ...c, year: year });
               }
-            });
-          }
+            }
+          });
+        });
+
+        // Sort upcoming campaigns chronologically: year asc, month index asc
+        upcomingCampaigns.sort((a, b) => {
+          if (a.year !== b.year) return a.year - b.year;
+          return monthNames.indexOf(a.month) - monthNames.indexOf(b.month);
+        });
+
+        // Sort past campaigns chronologically: year asc, month index asc
+        pastCampaigns.sort((a, b) => {
+          if (a.year !== b.year) return a.year - b.year;
+          return monthNames.indexOf(a.month) - monthNames.indexOf(b.month);
+        });
+
+        if (campaignsGrid) {
+          campaignsGrid.innerHTML = '';
+          upcomingCampaigns.forEach(c => {
+            campaignsGrid.appendChild(createCampaignCard(c));
+          });
         }
-      } else {
-        if (pastSection) {
-          pastSection.style.display = 'none';
+
+        if (pastCampaigns.length > 0) {
+          if (pastSection && pastGrid) {
+            pastSection.style.display = 'block';
+            pastGrid.innerHTML = '';
+            pastCampaigns.forEach(c => {
+              pastGrid.appendChild(createCampaignCard(c));
+            });
+
+            // Accordion trigger behavior
+            const trigger = document.getElementById('previous-campaigns-trigger');
+            const content = document.getElementById('previous-campaigns-content');
+            if (trigger && content) {
+              const newTrigger = trigger.cloneNode(true);
+              trigger.parentNode.replaceChild(newTrigger, trigger);
+              
+              newTrigger.addEventListener('click', function() {
+                const isActive = newTrigger.classList.contains('active');
+                if (isActive) {
+                  newTrigger.classList.remove('active');
+                  content.classList.remove('active');
+                  content.style.maxHeight = null;
+                  newTrigger.querySelector('span:first-child').innerText = 'Show Past Campaigns';
+                } else {
+                  newTrigger.classList.add('active');
+                  content.classList.add('active');
+                  content.style.maxHeight = content.scrollHeight + 'px';
+                  newTrigger.querySelector('span:first-child').innerText = 'Hide Past Campaigns';
+                }
+              });
+            }
+          }
+        } else {
+          if (pastSection) {
+            pastSection.style.display = 'none';
+          }
         }
       }
 
       // Render Missions
-      const missionsList = document.querySelector('.missions-list');
-      if (missionsList) {
-        missionsList.innerHTML = '';
-        missions.forEach(m => {
-          const item = document.createElement('div');
-          item.className = 'mission-item';
-          item.innerHTML = `
-            <div class="mission-header">
-              <h4 class="mission-name">${m.name}</h4>
-              <span class="mission-status">${m.status}</span>
-            </div>
-            <p class="mission-description">${m.description}</p>
-          `;
-          missionsList.appendChild(item);
-        });
-      }
-
-      function escapeHtml(text) {
-        if (!text) return '';
-        return text
-          .toString()
-          .replace(/&/g, "&amp;")
-          .replace(/</g, "&lt;")
-          .replace(/>/g, "&gt;")
-          .replace(/"/g, "&quot;")
-          .replace(/'/g, "&#039;");
+      function renderMissions(missionsData) {
+        if (!Array.isArray(missionsData)) return;
+        const missionsList = document.querySelector('.missions-list');
+        if (missionsList) {
+          missionsList.innerHTML = '';
+          missionsData.forEach(m => {
+            const item = document.createElement('div');
+            item.className = 'mission-item';
+            item.innerHTML = `
+              <div class="mission-header">
+                <h4 class="mission-name">${escapeHtml(m.name)}</h4>
+                <span class="mission-status">${escapeHtml(m.status)}</span>
+              </div>
+              <p class="mission-description">${escapeHtml(m.description)}</p>
+            `;
+            missionsList.appendChild(item);
+          });
+        }
       }
 
       // Render Outreach Cards (Apostolic Action)
-      const outreachGrid = document.querySelector('.outreach-grid');
-      if (outreachGrid) {
-        outreachGrid.innerHTML = '';
-        outreach.forEach(o => {
-          const card = document.createElement('div');
-          card.className = 'outreach-card';
-          if (o.hasFlyer) {
-            card.className = 'outreach-card clickable-card';
-            card.id = 'prison-ministry-card';
-          }
-          
-          card.innerHTML = `
-            <div class="outreach-icon">
-              ${o.icon || ''}
-            </div>
-            <h3 class="outreach-title">${escapeHtml(o.title)}</h3>
-            <p class="outreach-desc">${escapeHtml(o.desc)}</p>
-            ${o.hasFlyer ? '<span class="view-flyer-btn">View Flyer ➔</span>' : ''}
-          `;
+      function renderOutreach(outreachData) {
+        if (!Array.isArray(outreachData)) return;
+        const outreachGrid = document.querySelector('.outreach-grid');
+        if (outreachGrid) {
+          outreachGrid.innerHTML = '';
+          outreachData.forEach(o => {
+            const card = document.createElement('div');
+            card.className = 'outreach-card';
+            if (o.hasFlyer) {
+              card.className = 'outreach-card clickable-card';
+              card.id = 'prison-ministry-card';
+            }
+            
+            card.innerHTML = `
+              <div class="outreach-icon">
+                ${o.icon || ''}
+              </div>
+              <h3 class="outreach-title">${escapeHtml(o.title)}</h3>
+              <p class="outreach-desc">${escapeHtml(o.desc)}</p>
+              ${o.hasFlyer ? '<span class="view-flyer-btn">View Flyer ➔</span>' : ''}
+            `;
 
-          if (o.hasFlyer) {
-            card.addEventListener('click', function() {
-              const modal = document.getElementById('flyer-modal');
-              if (modal) {
-                modal.style.display = 'block';
-                document.body.style.overflow = 'hidden';
-              }
-            });
-          }
-          outreachGrid.appendChild(card);
-        });
+            if (o.hasFlyer) {
+              card.addEventListener('click', function() {
+                const modal = document.getElementById('flyer-modal');
+                if (modal) {
+                  modal.style.display = 'block';
+                  document.body.style.overflow = 'hidden';
+                }
+              });
+            }
+            outreachGrid.appendChild(card);
+          });
+        }
       }
 
       // Render Resources & Directives
-      const resourcesGrid = document.querySelector('.resources-grid');
-      if (resourcesGrid) {
-        resourcesGrid.innerHTML = '';
-        resources.forEach(r => {
-          const card = document.createElement('a');
-          card.className = 'resource-card';
-          card.href = r.url || '#';
-          card.target = '_blank';
-          
-          card.innerHTML = `
-            <div>
-              <div class="resource-icon">${escapeHtml(r.icon || '📕')}</div>
-              <h3 class="resource-title">${escapeHtml(r.title)}</h3>
-              <p class="resource-desc">${escapeHtml(r.desc)}</p>
-            </div>
-            <div class="resource-link-text">${escapeHtml(r.linkText || 'Read handbook ➔')}</div>
-          `;
-          resourcesGrid.appendChild(card);
-        });
+      function renderResources(resourcesData) {
+        if (!Array.isArray(resourcesData)) return;
+        const resourcesGrid = document.querySelector('.resources-grid');
+        if (resourcesGrid) {
+          resourcesGrid.innerHTML = '';
+          resourcesData.forEach(r => {
+            const card = document.createElement('a');
+            card.className = 'resource-card';
+            card.href = r.url || '#';
+            card.target = '_blank';
+            
+            card.innerHTML = `
+              <div>
+                <div class="resource-icon">${escapeHtml(r.icon || '📕')}</div>
+                <h3 class="resource-title">${escapeHtml(r.title)}</h3>
+                <p class="resource-desc">${escapeHtml(r.desc)}</p>
+              </div>
+              <div class="resource-link-text">${escapeHtml(r.linkText || 'Read handbook ➔')}</div>
+            `;
+            resourcesGrid.appendChild(card);
+          });
+        }
       }
+
+      function renderAll(data) {
+        if (data.hero) renderHero(data.hero);
+        if (data.campaigns) renderCampaigns(data.campaigns);
+        if (data.missions) renderMissions(data.missions);
+        if (data.outreach) renderOutreach(data.outreach);
+        if (data.resources) renderResources(data.resources);
+      }
+
+      // Initial fast render from cache or defaults
+      renderAll({
+        hero: hero,
+        campaigns: campaignsByYear,
+        missions: missions,
+        outreach: outreach,
+        resources: resources
+      });
+
+      // Background sync with Cloud Firestore
+      async function syncWithCloud() {
+        if (!window.firebaseStorage) return;
+        try {
+          const cloudData = await window.firebaseStorage.loadData();
+          if (cloudData) {
+            renderAll({
+              hero: cloudData.hero || hero,
+              campaigns: cloudData.campaigns || campaignsByYear,
+              missions: cloudData.missions || missions,
+              outreach: cloudData.outreach || outreach,
+              resources: cloudData.resources || resources
+            });
+
+            // Cache in localStorage
+            if (cloudData.campaigns) localStorage.setItem('lom_campaigns', JSON.stringify(cloudData.campaigns));
+            if (cloudData.missions) localStorage.setItem('lom_missions', JSON.stringify(cloudData.missions));
+            if (cloudData.outreach) localStorage.setItem('lom_outreach', JSON.stringify(cloudData.outreach));
+            if (cloudData.resources) localStorage.setItem('lom_resources', JSON.stringify(cloudData.resources));
+            if (cloudData.hero) localStorage.setItem('lom_hero', JSON.stringify(cloudData.hero));
+          }
+        } catch (err) {
+          console.warn("Could not sync with Cloud Firestore:", err);
+        }
+      }
+
+      window.onFirebaseReady = syncWithCloud;
+      syncWithCloud();
 
       // Mobile Menu Toggle
       const menuToggle = document.getElementById('menu-toggle');

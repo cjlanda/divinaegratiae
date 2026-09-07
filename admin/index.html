@@ -542,7 +542,7 @@
   <div id="dashboard-container">
     <header>
       <div class="logo-container">
-        <h1>Command Center</h1>
+        <h1>Command Center <span id="cloud-status" style="font-size: 12px; vertical-align: middle; padding: 3px 8px; border-radius: 12px; background: rgba(46, 125, 50, 0.1); color: #2e7d32; font-weight: 600;">🟢 Cloud Connected</span></h1>
         <p>Manage Upcoming Campaigns and Open Missions on your parish landing page.</p>
       </div>
       <div class="actions-top">
@@ -640,6 +640,46 @@
 
   <!-- Toast Notification -->
   <div id="toast">Changes saved and deployed to live site!</div>
+
+  <!-- Firebase Modular SDK -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-app.js";
+    import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.4.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyDHP2rf4FousJsYS8BHBYcGu-QY3UfC8vk",
+      authDomain: "legion-of-mary-san-mateo.firebaseapp.com",
+      projectId: "legion-of-mary-san-mateo",
+      storageBucket: "legion-of-mary-san-mateo.firebasestorage.app",
+      messagingSenderId: "276962319084",
+      appId: "1:276962319084:web:632d5cb39da449f602a3c9"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.firebaseStorage = {
+      async loadData() {
+        const docRef = doc(db, "site_content", "main");
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists()) {
+          return docSnap.data();
+        }
+        return null;
+      },
+      async saveData(data) {
+        const docRef = doc(db, "site_content", "main");
+        await setDoc(docRef, {
+          ...data,
+          updatedAt: new Date().toISOString()
+        });
+      }
+    };
+
+    if (typeof window.onFirebaseReady === 'function') {
+      window.onFirebaseReady();
+    }
+  </script>
 
   <script>
     // Portal Security check
@@ -910,6 +950,18 @@
       currentHero = savedHero ? savedHero : JSON.parse(JSON.stringify(defaultHero));
 
       // Populate Hero editor fields if elements exist
+      populateHeroEditor();
+
+      renderCampaignsEditor();
+      renderMissionsEditor();
+      renderOutreachEditor();
+      renderResourcesEditor();
+
+      // Sync with Cloud Firestore
+      refreshFromCloud();
+    }
+
+    function populateHeroEditor() {
       if (document.getElementById('hero-tagline-input')) {
         document.getElementById('hero-tagline-input').value = currentHero.tagline || '';
         document.getElementById('hero-title1-input').value = currentHero.title1 || '';
@@ -917,12 +969,43 @@
         document.getElementById('hero-desc-input').value = currentHero.desc || '';
         document.getElementById('hero-image-input').value = currentHero.image || '';
       }
-
-      renderCampaignsEditor();
-      renderMissionsEditor();
-      renderOutreachEditor();
-      renderResourcesEditor();
     }
+
+    async function refreshFromCloud() {
+      if (!window.firebaseStorage) return;
+      const statusEl = document.getElementById('cloud-status');
+      if (statusEl) statusEl.innerText = "⏳ Cloud Syncing...";
+      try {
+        const cloudData = await window.firebaseStorage.loadData();
+        if (cloudData) {
+          if (cloudData.campaigns) currentCampaigns = cloudData.campaigns;
+          if (cloudData.missions) currentMissions = cloudData.missions;
+          if (cloudData.outreach) currentOutreach = cloudData.outreach;
+          if (cloudData.resources) currentResources = cloudData.resources;
+          if (cloudData.hero) currentHero = cloudData.hero;
+
+          // Re-render editors with fresh cloud data
+          renderCampaignsEditor();
+          renderMissionsEditor();
+          renderOutreachEditor();
+          renderResourcesEditor();
+          populateHeroEditor();
+
+          if (statusEl) statusEl.innerText = "🟢 Cloud Synced";
+        } else {
+          if (statusEl) statusEl.innerText = "🟢 Cloud Connected";
+        }
+      } catch (err) {
+        console.warn("Could not sync with Firestore:", err);
+        if (statusEl) statusEl.innerText = "⚠️ Cloud Offline";
+      }
+    }
+
+    window.onFirebaseReady = function() {
+      if (document.getElementById('dashboard-container').style.display === 'block') {
+        refreshFromCloud();
+      }
+    };
 
     // Render Campaigns Editor
     function renderCampaignsEditor() {
@@ -1282,13 +1365,44 @@
     }
 
     // Save Changes
-    function saveChanges() {
+    async function saveChanges() {
+      // Capture any active inputs
+      if (document.getElementById('hero-tagline-input')) {
+        currentHero.tagline = document.getElementById('hero-tagline-input').value;
+        currentHero.title1 = document.getElementById('hero-title1-input').value;
+        currentHero.title2 = document.getElementById('hero-title2-input').value;
+        currentHero.desc = document.getElementById('hero-desc-input').value;
+        currentHero.image = document.getElementById('hero-image-input').value;
+      }
+
+      // Backup locally
       localStorage.setItem('lom_campaigns', JSON.stringify(currentCampaigns));
       localStorage.setItem('lom_missions', JSON.stringify(currentMissions));
       localStorage.setItem('lom_outreach', JSON.stringify(currentOutreach));
       localStorage.setItem('lom_resources', JSON.stringify(currentResources));
       localStorage.setItem('lom_hero', JSON.stringify(currentHero));
-      showToast("Changes saved and deployed to live site!");
+
+      showToast("Saving to Cloud Firestore...");
+
+      if (window.firebaseStorage) {
+        try {
+          await window.firebaseStorage.saveData({
+            campaigns: currentCampaigns,
+            missions: currentMissions,
+            outreach: currentOutreach,
+            resources: currentResources,
+            hero: currentHero
+          });
+          showToast("✅ Saved to Cloud Firestore & deployed live!");
+          const statusEl = document.getElementById('cloud-status');
+          if (statusEl) statusEl.innerText = "🟢 Synced: " + new Date().toLocaleTimeString();
+        } catch (err) {
+          console.error("Cloud save failed:", err);
+          showToast("⚠️ Cloud save failed: " + (err.message || err));
+        }
+      } else {
+        showToast("Changes saved locally (Cloud connecting...)");
+      }
     }
 
     // Helpers
